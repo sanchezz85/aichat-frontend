@@ -33,3 +33,12 @@ export const useCreateConversation = () => {
   });
 };
 
+export const useUserConversations = () => {
+  return useQuery({
+    queryKey: ['user', 'conversations'],
+    queryFn: () => chatApi.getUserConversations(),
+    refetchOnWindowFocus: false,
+    staleTime: 30000, // 30 seconds
+  });
+};
+

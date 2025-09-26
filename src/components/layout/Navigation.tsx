@@ -34,12 +34,7 @@ const Navigation: React.FC = () => {
       icon: Search,
       mobileOnly: false
     },
-    {
-      path: '/chat',
-      label: 'Chat',
-      icon: MessageCircle,
-      mobileOnly: true // Only show in mobile, since chat is accessed from personas
-    },
+
     {
       path: '/profile',
       label: 'Profile',
@@ -54,13 +49,7 @@ const Navigation: React.FC = () => {
       <header className="hidden md:block bg-bg-elev-1 border-b border-gray-700 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="bg-brand-500 rounded-lg p-1.5">
-                <Crown className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-text-primary">Nova</span>
-            </Link>
+
 
             {/* Navigation */}
             <nav className="flex items-center space-x-6">
@@ -86,25 +75,7 @@ const Navigation: React.FC = () => {
             {/* User Info */}
             {(user || isAuthenticated) && (
               <div className="flex items-center space-x-2">
-                {user && (
-                  <>
-                    <div className="text-right hidden lg:block">
-                      <div className="text-xs font-medium text-text-primary">
-                        {user.username}
-                      </div>
-                      <div className="flex items-center text-xs text-accent-400">
-                        <Crown className="w-2.5 h-2.5 mr-1" />
-                        {user.charm_points} points
-                      </div>
-                    </div>
-                    <Avatar
-                      src=""
-                      alt={user.username}
-                      size="xs"
-                      fallback={user.username}
-                    />
-                  </>
-                )}
+           
                 <a 
                   href="#"
                   onClick={(e) => {
@@ -161,20 +132,6 @@ const Navigation: React.FC = () => {
           {/* User Info */}
           {(user || isAuthenticated) && (
             <div className="flex items-center space-x-2">
-              {user && (
-                <>
-                  <div className="flex items-center text-xs text-accent-400">
-                    <Crown className="w-3 h-3 mr-1" />
-                    {user.charm_points}
-                  </div>
-                  <Avatar
-                    src=""
-                    alt={user.username}
-                    size="xs"
-                    fallback={user.username}
-                  />
-                </>
-              )}
               <a
                 href="#"
                 onClick={(e) => {

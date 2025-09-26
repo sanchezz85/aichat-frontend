@@ -63,38 +63,7 @@ const AuthenticatedHome: React.FC = () => {
         </div>
       </div>
 
-      {/* User Stats */}
-      {user && (
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="bg-bg-elev-1 rounded-xl p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <h2 className="text-xl font-semibold text-text-primary mb-1">
-                  Hello, {user.username}! ✨
-                </h2>
-                <p className="text-text-secondary">
-                  You have {user.charm_points} charm points
-                </p>
-              </div>
-              
-              <div className="mt-4 sm:mt-0 flex items-center space-x-6 text-sm text-text-secondary">
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-text-primary">{user.charm_points}</div>
-                  <div>Charm Points</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-text-primary">0</div>
-                  <div>Active Chats</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-lg font-semibold text-text-primary">0</div>
-                  <div>Unlocked Content</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+
 
       {/* Featured Personas */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">

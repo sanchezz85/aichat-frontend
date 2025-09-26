@@ -45,7 +45,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const canSend = message.trim().length > 0 && !disabled;
 
   return (
-    <div className="border-t border-gray-700 bg-bg-elev-1 p-4">
+    <div className="bg-bg px-4 pb-4">
       {/* Free messages counter */}
       {freeMessagesLeft !== undefined && freeMessagesLeft > 0 && (
         <div className="mb-2 text-center">

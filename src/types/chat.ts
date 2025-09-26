@@ -18,6 +18,8 @@ export interface Conversation {
   unlock_level: number;
   created_at: string;
   updated_at: string;
+  last_message?: string;
+  last_message_at?: string;
 }
 
 export interface ConversationProgress {

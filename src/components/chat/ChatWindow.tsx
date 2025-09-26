@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Wifi, WifiOff } from 'lucide-react';
-import { Avatar, Button, ProgressBar } from '../ui';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, Wifi, WifiOff, Trash2 } from 'lucide-react';
+import { Avatar, Button, Modal } from '../ui';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import TypingIndicator from './TypingIndicator';
 import { useConversationMessages } from '../../hooks/useChat';
 import { usePersona } from '../../hooks/usePersonas';
 import { useWebSocket } from '../../hooks/useWebSocket';
+import { chatApi } from '../../services/api';
 import { Message, WebSocketMessage } from '../../types';
 
 interface ChatWindowProps {
@@ -18,9 +19,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
   const navigate = useNavigate();
   const [localMessages, setLocalMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [charmPoints, setCharmPoints] = useState(0);
-  const [unlockLevel, setUnlockLevel] = useState(0);
+  const [, setCharmPoints] = useState(0); // Used for gamification tracking
+  const [, setUnlockLevel] = useState(0); // Used for gamification tracking
   const [freeMessagesLeft, setFreeMessagesLeft] = useState(10); // Mock free messages
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   // Get conversation data
   const { data: conversationData, isLoading: loadingMessages } = useConversationMessages(conversationId);
@@ -103,19 +106,33 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
     navigate(-1);
   };
 
-  const charmPointsProgress = persona ? (charmPoints / persona.unlock_requirements.charm_points) * 100 : 0;
+  const handleDeleteMessages = async () => {
+    setIsDeleting(true);
+    try {
+      await chatApi.deleteAllMessages(conversationId);
+      setLocalMessages([]);
+      setCharmPoints(0);
+      setUnlockLevel(0);
+      setShowDeleteModal(false);
+    } catch (error) {
+      console.error('Failed to delete messages:', error);
+      // Could add toast notification here
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   return (
     <div className="h-full flex flex-col bg-bg">
       {/* Header */}
-      <div className="bg-bg-elev-1 border-b border-gray-700 px-4 py-3">
+      <div className="bg-bg-elev-1 border-b border-gray-700 px-4 py-0 h-8 min-h-0">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <Button
               variant="tertiary"
               size="sm"
               onClick={handleBack}
-              className="p-2 -ml-2"
+              className="p-0.5 -ml-1 h-6"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
@@ -123,24 +140,19 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
             <Avatar
               src={persona?.avatar_url}
               alt={persona?.name}
-              size="sm"
+              size="xs"
               fallback={persona?.name}
             />
             
             <div className="min-w-0">
-              <h1 className="font-semibold text-text-primary truncate">
+              <h1 className="font-semibold text-text-primary truncate text-sm leading-tight">
                 {persona?.name || 'Loading...'}
               </h1>
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center -mt-0.5">
                 <span className={`flex items-center text-xs ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
-                  {isConnected ? <Wifi className="w-3 h-3 mr-1" /> : <WifiOff className="w-3 h-3 mr-1" />}
+                  {isConnected ? <Wifi className="w-2.5 h-2.5 mr-1" /> : <WifiOff className="w-2.5 h-2.5 mr-1" />}
                   {isConnected ? 'Online' : 'Offline'}
                 </span>
-                {charmPoints > 0 && (
-                  <span className="text-xs text-accent-400">
-                    ✨ {charmPoints} points
-                  </span>
-                )}
               </div>
             </div>
           </div>
@@ -148,24 +160,13 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
           <Button
             variant="tertiary"
             size="sm"
-            className="p-2"
+            className="p-0.5 h-6"
+            onClick={() => setShowDeleteModal(true)}
+            disabled={localMessages.length === 0}
           >
-            <MoreVertical className="w-5 h-5" />
+            <Trash2 className={`w-4 h-4 ${localMessages.length === 0 ? 'text-gray-500' : 'text-white hover:text-gray-200'}`} />
           </Button>
         </div>
-        
-        {/* Progress bar */}
-        {persona && charmPoints < persona.unlock_requirements.charm_points && (
-          <div className="mt-3">
-            <ProgressBar
-              value={charmPoints}
-              max={persona.unlock_requirements.charm_points}
-              label="Charm Progress"
-              color="accent"
-              size="sm"
-            />
-          </div>
-        )}
       </div>
 
       {/* Messages */}
@@ -179,7 +180,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
 
       {/* Typing indicator */}
       {isTyping && (
-        <TypingIndicator className="px-4 py-2 border-t border-gray-700" />
+        <TypingIndicator className="px-4 py-2" />
       )}
 
       {/* Input */}
@@ -193,6 +194,42 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
         }
         freeMessagesLeft={freeMessagesLeft}
       />
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete All Messages"
+        size="sm"
+        className="max-w-xs"
+      >
+        <div className="space-y-3">
+          <p className="text-sm text-text-secondary leading-relaxed">
+            Are you sure you want to delete all messages in this chat? This action cannot be undone and will reset your progress with {persona?.name}.
+          </p>
+          
+          <div className="flex space-x-2 justify-end pt-2">
+            <Button
+              variant="secondary"
+              size="xs"
+              onClick={() => setShowDeleteModal(false)}
+              disabled={isDeleting}
+              className="px-3 py-1.5 text-xs"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="primary"
+              size="xs"
+              onClick={handleDeleteMessages}
+              disabled={isDeleting}
+              className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 text-xs"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete All'}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

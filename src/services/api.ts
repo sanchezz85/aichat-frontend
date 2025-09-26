@@ -302,8 +302,125 @@ const MOCK_MEDIA: MediaContent[] = [
   }
 ];
 
-const MOCK_CONVERSATIONS: Conversation[] = [];
-const MOCK_MESSAGES: Message[] = [];
+const MOCK_CONVERSATIONS: Conversation[] = [
+  {
+    id: 'conv-1',
+    user_id: 'user-1',
+    persona_id: '550e8400-e29b-41d4-a716-446655440001',
+    persona_name: 'Emma',
+    message_count: 3,
+    charm_points_earned: 5,
+    unlock_level: 0,
+    created_at: '2024-01-15T10:30:00Z',
+    updated_at: '2024-01-15T14:45:00Z',
+    last_message: 'That sounds amazing! I love coffee shops with good ambiance.',
+    last_message_at: '2024-01-15T14:45:00Z'
+  },
+  {
+    id: 'conv-2',
+    user_id: 'user-1',
+    persona_id: '550e8400-e29b-41d4-a716-446655440004',
+    persona_name: 'Luna',
+    message_count: 2,
+    charm_points_earned: 3,
+    unlock_level: 0,
+    created_at: '2024-01-14T16:20:00Z',
+    updated_at: '2024-01-14T16:35:00Z',
+    last_message: 'Mindfulness is such a beautiful practice. Have you tried meditation?',
+    last_message_at: '2024-01-14T16:35:00Z'
+  },
+  {
+    id: 'conv-3',
+    user_id: 'user-1',
+    persona_id: '550e8400-e29b-41d4-a716-446655440007',
+    persona_name: 'Mia',
+    message_count: 5,
+    charm_points_earned: 8,
+    unlock_level: 1,
+    created_at: '2024-01-13T20:15:00Z',
+    updated_at: '2024-01-13T21:30:00Z',
+    last_message: 'OMG yes! That anime is so good! Have you seen the latest episode?',
+    last_message_at: '2024-01-13T21:30:00Z'
+  }
+];
+
+const MOCK_MESSAGES: Message[] = [
+  // Emma conversation
+  {
+    id: 'msg-1',
+    conversation_id: 'conv-1',
+    sender_type: 'user',
+    content: 'Hi Emma! How are you today?',
+    created_at: '2024-01-15T10:30:00Z'
+  },
+  {
+    id: 'msg-2',
+    conversation_id: 'conv-1',
+    sender_type: 'persona',
+    content: 'Hello! I\'m doing wonderful, thank you for asking! Just finished a great workout and I\'m feeling energized. How about you? What brings you here today?',
+    created_at: '2024-01-15T10:32:00Z'
+  },
+  {
+    id: 'msg-3',
+    conversation_id: 'conv-1',
+    sender_type: 'user',
+    content: 'I\'m doing well! Just looking for a nice coffee shop to work from. Any recommendations?',
+    created_at: '2024-01-15T14:40:00Z'
+  },
+  {
+    id: 'msg-4',
+    conversation_id: 'conv-1',
+    sender_type: 'persona',
+    content: 'That sounds amazing! I love coffee shops with good ambiance. There\'s this cozy little place downtown called "The Daily Grind" - they have the best lattes and really comfortable seating. Perfect for getting work done!',
+    created_at: '2024-01-15T14:45:00Z'
+  },
+  
+  // Luna conversation
+  {
+    id: 'msg-5',
+    conversation_id: 'conv-2',
+    sender_type: 'user',
+    content: 'Hey Luna, I\'ve been feeling stressed lately. Any advice?',
+    created_at: '2024-01-14T16:20:00Z'
+  },
+  {
+    id: 'msg-6',
+    conversation_id: 'conv-2',
+    sender_type: 'persona',
+    content: 'I understand that feeling completely. Stress is like clouds passing through the sky of our minds. Mindfulness is such a beautiful practice. Have you tried meditation? Even just 5 minutes a day can bring such peace and clarity.',
+    created_at: '2024-01-14T16:35:00Z'
+  },
+  
+  // Mia conversation
+  {
+    id: 'msg-7',
+    conversation_id: 'conv-3',
+    sender_type: 'user',
+    content: 'Hi Mia! I heard you\'re into anime?',
+    created_at: '2024-01-13T20:15:00Z'
+  },
+  {
+    id: 'msg-8',
+    conversation_id: 'conv-3',
+    sender_type: 'persona',
+    content: 'OMG yes! Anime is literally my life! ✨ What kind of shows do you like? I\'m currently obsessed with this new series about magical girls!',
+    created_at: '2024-01-13T20:17:00Z'
+  },
+  {
+    id: 'msg-9',
+    conversation_id: 'conv-3',
+    sender_type: 'user',
+    content: 'I love action anime! Have you watched Attack on Titan?',
+    created_at: '2024-01-13T21:25:00Z'
+  },
+  {
+    id: 'msg-10',
+    conversation_id: 'conv-3',
+    sender_type: 'persona',
+    content: 'OMG yes! That anime is so good! Have you seen the latest episode? I literally cried! The animation is just *chef\'s kiss* perfect! 😭✨',
+    created_at: '2024-01-13T21:30:00Z'
+  }
+];
 
 // Mock API delay
 const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, ms));
@@ -420,6 +537,28 @@ export const mediaApi = {
 
 // Chat API
 export const chatApi = {
+  async getUserConversations(): Promise<Conversation[]> {
+    if (MOCK_MODE) {
+      await delay();
+      
+      // Return conversations with last message info
+      return MOCK_CONVERSATIONS.map(conv => {
+        const lastMessage = MOCK_MESSAGES
+          .filter(m => m.conversation_id === conv.id)
+          .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+        
+        return {
+          ...conv,
+          last_message: lastMessage?.content || '',
+          last_message_at: lastMessage?.created_at || conv.updated_at
+        };
+      }).sort((a, b) => new Date(b.last_message_at!).getTime() - new Date(a.last_message_at!).getTime());
+    }
+    
+    const response = await api.get<{ conversations: Conversation[] }>('/conversations');
+    return response.data.conversations;
+  },
+
   async createConversation(request: CreateConversationRequest): Promise<Conversation> {
     if (MOCK_MODE) {
       await delay();
@@ -487,7 +626,6 @@ export const chatApi = {
       
       // Generate AI response
       const conversation = MOCK_CONVERSATIONS.find(c => c.id === conversationId);
-      const persona = conversation ? MOCK_PERSONAS.find(p => p.id === conversation.persona_id) : null;
       
       const aiResponses = [
         "That's interesting! Tell me more about that. 😊",
@@ -531,6 +669,35 @@ export const chatApi = {
     
     const response = await api.post<ChatResponse>(`/conversations/${conversationId}/messages`, request);
     return response.data;
+  },
+
+  async deleteAllMessages(conversationId: string): Promise<void> {
+    if (MOCK_MODE) {
+      await delay();
+      
+      // Remove all messages for this conversation from mock data
+      const messagesToRemove = MOCK_MESSAGES.filter(m => m.conversation_id === conversationId);
+      messagesToRemove.forEach(message => {
+        const index = MOCK_MESSAGES.indexOf(message);
+        if (index > -1) {
+          MOCK_MESSAGES.splice(index, 1);
+        }
+      });
+      
+      // Reset conversation progress
+      const conversation = MOCK_CONVERSATIONS.find(c => c.id === conversationId);
+      if (conversation) {
+        conversation.message_count = 0;
+        conversation.charm_points_earned = 0;
+        conversation.unlock_level = 0;
+        conversation.last_message = '';
+        conversation.updated_at = new Date().toISOString();
+      }
+      
+      return;
+    }
+    
+    await api.delete(`/conversations/${conversationId}/messages`);
   }
 };
 

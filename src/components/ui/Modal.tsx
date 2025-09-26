@@ -75,9 +75,9 @@ const Modal: React.FC<ModalProps> = ({
         )}>
           {/* Header */}
           {(title || showCloseButton) && (
-            <div className="flex items-center justify-between p-6 pb-4">
+            <div className="flex items-center justify-between p-4 pb-3">
               {title && (
-                <h2 className="text-xl font-semibold text-text-primary">
+                <h2 className="text-lg font-medium text-text-primary">
                   {title}
                 </h2>
               )}
@@ -86,7 +86,7 @@ const Modal: React.FC<ModalProps> = ({
                   onClick={onClose}
                   className="rounded-lg p-1 text-text-tertiary hover:text-text-primary hover:bg-gray-700 transition-colors"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </div>
@@ -94,8 +94,8 @@ const Modal: React.FC<ModalProps> = ({
           
           {/* Content */}
           <div className={clsx(
-            'px-6',
-            (title || showCloseButton) ? 'pb-6' : 'py-6'
+            'px-4',
+            (title || showCloseButton) ? 'pb-4' : 'py-4'
           )}>
             {children}
           </div>

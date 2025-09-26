@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Avatar } from '../ui';
-import { Message, SenderType } from '../../types';
+import { Message } from '../../types';
 
 // Simple time formatter
 const formatTimeAgo = (dateString: string): string => {
@@ -17,13 +17,11 @@ const formatTimeAgo = (dateString: string): string => {
 interface MessageBubbleProps {
   message: Message;
   personaName?: string;
-  personaAvatar?: string;
 }
 
 const MessageBubble: React.FC<MessageBubbleProps> = ({ 
   message, 
-  personaName, 
-  personaAvatar 
+  personaName 
 }) => {
   const isUser = message.sender_type === 'user';
   const timestamp = formatTimeAgo(message.created_at);
@@ -44,13 +42,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({
   }
 
   return (
-    <div className="flex items-start space-x-2 mb-4">
-      <Avatar
-        src={personaAvatar}
-        alt={personaName}
-        size="sm"
-        fallback={personaName}
-      />
+    <div className="flex items-start mb-4">
       <div className="max-w-xs lg:max-w-md">
         <div className="bg-bg-elev-1 text-text-primary px-4 py-2 rounded-2xl rounded-bl-md">
           <p className="text-sm">{message.content}</p>
@@ -122,16 +114,17 @@ const MessageList: React.FC<MessageListProps> = ({
 
   return (
     <div className={`flex-1 overflow-y-auto p-4 ${className}`}>
-      <div className="space-y-1">
-        {messages.map((message) => (
-          <MessageBubble
-            key={message.id}
-            message={message}
-            personaName={personaName}
-            personaAvatar={personaAvatar}
-          />
-        ))}
-        <div ref={messagesEndRef} />
+      <div className="mx-auto w-full max-w-2xl">
+        <div className="space-y-2">
+          {messages.map((message) => (
+            <MessageBubble
+              key={message.id}
+              message={message}
+              personaName={personaName}
+            />
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
     </div>
   );

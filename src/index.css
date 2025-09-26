@@ -50,6 +50,20 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Increase font sizes specifically within the chat layout */
+.chat-layout {
+  font-size: 1.2rem; /* base bump ~20% for inherited text */
+}
+
+/* Adjust common Tailwind text size utility mappings inside chat layout */
+.chat-layout .text-xs { font-size: 0.9rem; }
+.chat-layout .text-sm { font-size: 1.05rem; }
+.chat-layout .text-base { font-size: 1.2rem; }
+.chat-layout .text-lg { font-size: 1.35rem; }
+.chat-layout .text-xl { font-size: 1.5rem; }
+.chat-layout .text-2xl { font-size: 1.8rem; }
+.chat-layout .text-3xl { font-size: 2.1rem; }
+
 /* Custom utility classes */
 .line-clamp-1 {
   display: -webkit-box;
@@ -72,23 +86,64 @@ body {
   overflow: hidden;
 }
 
-/* Scrollbar styling for dark theme */
+/* Default scrollbar styling for dark theme */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg);
+  background: rgba(31, 41, 55, 0.3);
+  border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #374151;
-  border-radius: 3px;
+  background: #4b5563;
+  border-radius: 5px;
+  border: 1px solid #374151;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #4b5563;
+  background: #6b7280;
+}
+
+::-webkit-scrollbar-corner {
+  background: rgba(31, 41, 55, 0.3);
+}
+
+/* Chat column scrollbars - only apply to chat layout */
+.chat-layout .chat-scrollable {
+  scrollbar-width: thin;
+  scrollbar-color: #6b7280 rgba(55, 65, 81, 0.5);
+  overflow-y: scroll !important;
+}
+
+.chat-layout .chat-scrollable::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  background: rgba(55, 65, 81, 0.3);
+}
+
+.chat-layout .chat-scrollable::-webkit-scrollbar-track {
+  background: rgba(55, 65, 81, 0.5);
+  border-radius: 7px;
+  margin: 2px;
+}
+
+.chat-layout .chat-scrollable::-webkit-scrollbar-thumb {
+  background: #6b7280;
+  border-radius: 7px;
+  border: 2px solid rgba(55, 65, 81, 0.5);
+  min-height: 30px;
+}
+
+.chat-layout .chat-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+  border-color: rgba(75, 85, 99, 0.7);
+}
+
+.chat-layout .chat-scrollable::-webkit-scrollbar-corner {
+  background: rgba(55, 65, 81, 0.3);
 }
 
 /* Focus ring styles */

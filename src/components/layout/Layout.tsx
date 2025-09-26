@@ -3,13 +3,25 @@ import Navigation from './Navigation';
 
 interface LayoutProps {
   children: React.ReactNode;
+  chatLayout?: boolean;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProps> = ({ children, chatLayout = false }) => {
+  if (chatLayout) {
+    return (
+      <div className="h-screen bg-bg flex flex-col">
+        <Navigation />
+        <main className="flex-1 overflow-hidden" style={{ height: 'calc(100vh - 5rem)' }}>
+          {children}
+        </main>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-bg">
+    <div className="min-h-screen bg-bg flex flex-col">
       <Navigation />
-      <main className="pt-16 md:pt-20 pb-20 md:pb-8">
+      <main className="flex-1">
         {children}
       </main>
     </div>

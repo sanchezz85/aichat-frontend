@@ -23,7 +23,8 @@ const PersonaCard: React.FC<PersonaCardProps> = ({
       const conversation = await chatApi.createConversation({ 
         persona_id: persona.id 
       });
-      navigate(`/chat/${conversation.id}`);
+      // Navigate to the new three-column chat layout with this conversation
+      navigate('/chat', { state: { selectedConversationId: conversation.id } });
     } catch (error) {
       console.error('Failed to start chat:', error);
     } finally {
