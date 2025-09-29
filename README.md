@@ -21,11 +21,10 @@ A modern, mobile-first React frontend for the AI Persona Platform MVP. Built wit
 
 ### 🔧 Technical Features
 - **TypeScript**: Full type safety across the codebase
-- **Mock Backend**: Complete mock API and WebSocket implementation
 - **State Management**: Zustand for auth, React Query for server state
 - **Routing**: React Router with protected routes
 - **Form Handling**: React Hook Form with validation
-- **Real-time Communication**: Socket.io mock for chat
+- **Real-time Communication**: WebSocket-based chat
 
 ## Tech Stack
 
@@ -39,7 +38,6 @@ A modern, mobile-first React frontend for the AI Persona Platform MVP. Built wit
 - **Forms**: React Hook Form
 - **Icons**: Lucide React
 - **HTTP Client**: Axios
-- **Real-time**: Socket.io Client (mocked)
 
 ## Project Structure
 
@@ -117,10 +115,9 @@ Each persona features:
 - Themed media galleries with exclusive content
 
 ### Chat System
-- Real-time messaging with WebSocket simulation
+- Real-time messaging over WebSocket
 - Typing indicators and message states
 - Charm points earned per interaction
-- Free message limit with paywall simulation
 
 ### Media Gallery
 - Locked/unlocked content system
@@ -155,16 +152,7 @@ The UI follows a comprehensive design system with:
 - **Breakpoints**: xs(360), sm(480), md(768), lg(1024), xl(1280)
 - **Navigation**: Bottom tabs on mobile, header on desktop
 
-## Mock Data
-
-The application includes comprehensive mock data:
-
-- **3 AI Personas** with distinct personalities
-- **Sample conversations** and message history
-- **Media content** with unlock progression
-- **User data** with charm points system
-
-All mock services simulate real API delays and error handling.
+ 
 
 ## Development
 
@@ -190,11 +178,7 @@ VITE_API_BASE_URL=http://localhost:8080/api
 VITE_WS_URL=ws://localhost:8080
 ```
 
-### Mock vs Real Backend
-Toggle between mock and real backend in `src/config/api.ts`:
-```typescript
-export const MOCK_MODE = true; // Set to false for real backend
-```
+ 
 
 ## Architecture Decisions
 

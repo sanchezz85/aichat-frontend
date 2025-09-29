@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Heart, MapPin, Calendar, User, Briefcase } from 'lucide-react';
+import { MapPin, Calendar, Briefcase, User } from 'lucide-react';
 import { Avatar, Badge } from '../ui';
 import { MediaGallery } from '../media';
 import { PersonaDetail } from '../../types';
@@ -44,16 +44,12 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
     );
   }
 
-  // Mock additional persona data that would come from backend
+  // Placeholder meta values until extended profile fields are provided by backend
   const personaDetails = {
-    age: 24,
-    location: 'Sydney, Australia',
-    occupation: 'HR Professional',
-    interests: ['Coffee', 'Reading', 'Beach walks', 'Cooking'],
-    relationship: 'Single',
-    bodyType: 'Slim',
-    ethnicity: 'Australian',
-    language: 'English'
+    age: undefined as number | undefined,
+    location: undefined as string | undefined,
+    occupation: undefined as string | undefined,
+    interests: [] as string[]
   };
 
 
@@ -115,48 +111,48 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
             <div>
               <h3 className="text-lg font-semibold text-text-primary mb-4">About Me:</h3>
               <div className="space-y-3">
-                <div className="flex items-center gap-3">
-                  <Calendar size={16} className="text-text-secondary" />
-                  <span className="text-sm text-text-secondary">Age</span>
-                  <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.age}</span>
-                </div>
+                {personaDetails.age !== undefined && (
+                  <div className="flex items-center gap-3">
+                    <Calendar size={16} className="text-text-secondary" />
+                    <span className="text-sm text-text-secondary">Age</span>
+                    <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.age}</span>
+                  </div>
+                )}
                 
-                <div className="flex items-center gap-3">
-                  <MapPin size={16} className="text-text-secondary" />
-                  <span className="text-sm text-text-secondary">Location</span>
-                  <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.location}</span>
-                </div>
+                {personaDetails.location && (
+                  <div className="flex items-center gap-3">
+                    <MapPin size={16} className="text-text-secondary" />
+                    <span className="text-sm text-text-secondary">Location</span>
+                    <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.location}</span>
+                  </div>
+                )}
                 
-                <div className="flex items-center gap-3">
-                  <Briefcase size={16} className="text-text-secondary" />
-                  <span className="text-sm text-text-secondary">Occupation</span>
-                  <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.occupation}</span>
-                </div>
+                {personaDetails.occupation && (
+                  <div className="flex items-center gap-3">
+                    <Briefcase size={16} className="text-text-secondary" />
+                    <span className="text-sm text-text-secondary">Occupation</span>
+                    <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.occupation}</span>
+                  </div>
+                )}
                 
-                <div className="flex items-center gap-3">
-                  <Heart size={16} className="text-text-secondary" />
-                  <span className="text-sm text-text-secondary">Relationship</span>
-                  <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.relationship}</span>
-                </div>
-                
-                <div className="flex items-center gap-3">
-                  <User size={16} className="text-text-secondary" />
-                  <span className="text-sm text-text-secondary">Body Type</span>
-                  <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.bodyType}</span>
-                </div>
+                {/* Additional extended fields can be displayed once backend provides them */}
               </div>
             </div>
 
             {/* Interests */}
             <div>
               <h3 className="text-lg font-semibold text-text-primary mb-3">Interests:</h3>
-              <div className="flex flex-wrap gap-2">
-                {personaDetails.interests.map((interest, index) => (
-                  <Badge key={index} variant="default" className="text-xs">
-                    {interest}
-                  </Badge>
-                ))}
-              </div>
+              {personaDetails.interests.length > 0 ? (
+                <div className="flex flex-wrap gap-2">
+                  {personaDetails.interests.map((interest, index) => (
+                    <Badge key={index} variant="default" className="text-xs">
+                      {interest}
+                    </Badge>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-text-tertiary">No additional details available.</p>
+              )}
             </div>
 
       

@@ -4,8 +4,6 @@ export const API_CONFIG = {
   MEDIA_BASE_URL: 'http://localhost:8080/media'
 };
 
-export const MOCK_MODE = false; // Set to false when real backend is ready
-
 // Resolve absolute URL for assets coming from backend or public folder
 // - If url is absolute (http/https), return as-is
 // - If url starts with /media, point to backend media host

@@ -21,7 +21,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [, setCharmPoints] = useState(0); // Used for gamification tracking
   const [, setUnlockLevel] = useState(0); // Used for gamification tracking
-  const [freeMessagesLeft, setFreeMessagesLeft] = useState(10); // Mock free messages
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -70,8 +69,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
           setUnlockLevel(wsMessage.unlock_level);
         }
         
-        // Decrease free messages
-        setFreeMessagesLeft(prev => Math.max(0, prev - 1));
       }
     });
 
@@ -79,11 +76,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
   }, [onMessage, conversationId]);
 
   const handleSendMessage = (content: string) => {
-    if (freeMessagesLeft <= 0) {
-      // Show paywall or subscription modal
-      return;
-    }
-
     // Add user message to local state immediately
     const userMessage: Message = {
       id: `local-${Date.now()}`,
@@ -185,13 +177,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
       {/* Input */}
       <MessageInput
         onSendMessage={handleSendMessage}
-        disabled={freeMessagesLeft <= 0}
+        disabled={false}
         placeholder={
           isConnected
             ? 'Type a message...'
             : 'Offline. You can type, but sending may not work until reconnected.'
         }
-        freeMessagesLeft={freeMessagesLeft}
       />
 
       {/* Delete Confirmation Modal */}
