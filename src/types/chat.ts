@@ -14,39 +14,25 @@ export interface Conversation {
   persona_id: string;
   persona_name: string;
   message_count: number;
-  charm_points_earned: number;
-  unlock_level: number;
   created_at: string;
   updated_at: string;
   last_message?: string;
   last_message_at?: string;
 }
 
-export interface ConversationProgress {
-  message_count: number;
-  charm_points_earned: number;
-  unlock_level: number;
-}
+// Gamification removed
 
-export interface GamificationResult {
-  charm_points_gained: number;
-  level_unlocked: boolean;
-  unlock_level: number;
-}
+// Gamification removed
 
 export interface ChatResponse {
   message_id: string;
   ai_response: string;
-  progress_update: GamificationResult;
 }
 
 // WebSocket message types
 export interface WebSocketMessage {
   type: 'user_message' | 'persona_response' | 'typing_indicator' | 'system_message';
   content?: string;
-  charm_points_gained?: number;
-  level_unlocked?: boolean;
-  unlock_level?: number;
   typing_complete?: boolean;
   is_typing?: boolean;
 }

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Lock, Play, Eye } from 'lucide-react';
-import { Badge, Button } from '../ui';
+import { Play, Eye } from 'lucide-react';
+import { Button } from '../ui';
 import { MediaContent } from '../../types';
 
 interface MediaItemProps {
@@ -20,11 +20,7 @@ const MediaItem: React.FC<MediaItemProps> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   const handleView = () => {
-    if (media.is_unlocked) {
-      onView?.(media);
-    } else {
-      onUnlock?.(media);
-    }
+    onView?.(media);
   };
 
   const getLevelBadge = (level: number) => {
@@ -51,11 +47,7 @@ const MediaItem: React.FC<MediaItemProps> = ({
             <img
               src={media.file_url}
               alt="Media content"
-              className={`w-full h-full object-cover transition-all duration-200 ${
-                media.is_unlocked 
-                  ? 'group-hover:scale-105' 
-                  : 'blur-md'
-              } ${isLoading ? 'opacity-0' : 'opacity-100'}`}
+              className={`w-full h-full object-cover transition-all duration-200 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               onLoad={() => setIsLoading(false)}
               onError={() => {
                 setImageError(true);
@@ -64,7 +56,7 @@ const MediaItem: React.FC<MediaItemProps> = ({
             />
             
             {/* Video play icon */}
-            {media.content_type === 'video' && media.is_unlocked && (
+            {media.content_type === 'video' && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity">
                 <div className="bg-black/50 rounded-full p-3">
                   <Play className="w-6 h-6 text-white" />
@@ -87,41 +79,17 @@ const MediaItem: React.FC<MediaItemProps> = ({
           <div className="absolute inset-0 bg-gray-800 animate-pulse" />
         )}
 
-        {/* Lock overlay */}
-        {!media.is_unlocked && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <div className="text-center text-white">
-              <div className="bg-black/50 rounded-full p-4 mb-2">
-                <Lock className="w-6 h-6" />
-              </div>
-              <p className="text-xs font-medium">Unlock to view</p>
-            </div>
-          </div>
-        )}
+        {/* Lock overlay removed */}
 
-        {/* Level badge */}
-        <div className="absolute top-2 left-2">
-          {getLevelBadge(media.unlock_level)}
-        </div>
+        {/* Level badge removed */}
 
         {/* View/Unlock button overlay */}
         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <Button
-            size="sm"
-            variant={media.is_unlocked ? "primary" : "secondary"}
-            className="pointer-events-auto"
-          >
-            {media.is_unlocked ? (
-              <>
-                <Eye className="w-4 h-4 mr-1" />
-                View
-              </>
-            ) : (
-              <>
-                <Lock className="w-4 h-4 mr-1" />
-                Unlock
-              </>
-            )}
+          <Button size="sm" variant="primary" className="pointer-events-auto">
+            <>
+              <Eye className="w-4 h-4 mr-1" />
+              View
+            </>
           </Button>
         </div>
       </div>
@@ -132,11 +100,7 @@ const MediaItem: React.FC<MediaItemProps> = ({
           <span className="text-text-secondary capitalize">
             {media.content_type}
           </span>
-          {!media.is_unlocked && (
-            <span className="text-accent-400">
-              Level {media.unlock_level} Required
-            </span>
-          )}
+          
         </div>
       </div>
     </div>

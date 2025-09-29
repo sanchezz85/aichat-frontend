@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { User, Settings, LogOut, Crown, MessageSquare, Image, TrendingUp } from 'lucide-react';
+import { Settings, LogOut, MessageSquare, Image } from 'lucide-react';
 import { Button, Avatar, Modal } from '../components/ui';
 import { useAuth } from '../hooks/useAuth';
 
@@ -21,8 +21,7 @@ const ProfilePage: React.FC = () => {
   const stats = {
     conversations: 0, // This would come from API
     mediaUnlocked: 0,
-    totalTimeSpent: '0h 0m',
-    level: Math.floor(user.charm_points / 100) + 1
+    totalTimeSpent: '0h 0m'
   };
 
   return (
@@ -45,10 +44,6 @@ const ProfilePage: React.FC = () => {
                 {user.email}
               </p>
               <div className="flex items-center mt-2 space-x-4">
-                <div className="flex items-center text-accent-400">
-                  <Crown className="w-4 h-4 mr-1" />
-                  <span className="text-sm font-medium">Level {stats.level}</span>
-                </div>
                 <div className="text-sm text-text-secondary">
                   Member since {new Date(user.created_at).toLocaleDateString()}
                 </div>
@@ -76,16 +71,6 @@ const ProfilePage: React.FC = () => {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="bg-bg-elev-2 rounded-lg p-4 text-center">
             <div className="flex items-center justify-center mb-2">
-              <Crown className="w-5 h-5 text-accent-400" />
-            </div>
-            <div className="text-2xl font-bold text-text-primary">
-              {user.charm_points}
-            </div>
-            <div className="text-sm text-text-secondary">Charm Points</div>
-          </div>
-
-          <div className="bg-bg-elev-2 rounded-lg p-4 text-center">
-            <div className="flex items-center justify-center mb-2">
               <MessageSquare className="w-5 h-5 text-brand-400" />
             </div>
             <div className="text-2xl font-bold text-text-primary">
@@ -104,57 +89,10 @@ const ProfilePage: React.FC = () => {
             <div className="text-sm text-text-secondary">Media Unlocked</div>
           </div>
 
-          <div className="bg-bg-elev-2 rounded-lg p-4 text-center">
-            <div className="flex items-center justify-center mb-2">
-              <TrendingUp className="w-5 h-5 text-yellow-400" />
-            </div>
-            <div className="text-2xl font-bold text-text-primary">
-              {stats.level}
-            </div>
-            <div className="text-sm text-text-secondary">Level</div>
-          </div>
+          
         </div>
       </div>
 
-      {/* Level Progress */}
-      <div className="bg-bg-elev-1 rounded-xl p-6 mb-6">
-        <h2 className="text-xl font-semibold text-text-primary mb-4">
-          Level Progress
-        </h2>
-        
-        <div className="mb-4">
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-sm text-text-secondary">
-              Level {stats.level}
-            </span>
-            <span className="text-sm text-text-secondary">
-              Next level: {(stats.level + 1) * 100} points
-            </span>
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-3">
-            <div
-              className="bg-gradient-to-r from-brand-500 to-accent-500 h-3 rounded-full transition-all duration-300"
-              style={{
-                width: `${((user.charm_points % 100) / 100) * 100}%`
-              }}
-            />
-          </div>
-          <p className="text-xs text-text-tertiary mt-2">
-            {user.charm_points} / {stats.level * 100} points to next level
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-          <div className="flex items-center justify-between p-3 bg-bg-elev-2 rounded-lg">
-            <span className="text-text-secondary">Current Level</span>
-            <span className="text-text-primary font-medium">Level {stats.level}</span>
-          </div>
-          <div className="flex items-center justify-between p-3 bg-bg-elev-2 rounded-lg">
-            <span className="text-text-secondary">Total Points</span>
-            <span className="text-text-primary font-medium">{user.charm_points}</span>
-          </div>
-        </div>
-      </div>
 
       {/* Account Information */}
       <div className="bg-bg-elev-1 rounded-xl p-6 mb-6">

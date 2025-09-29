@@ -19,8 +19,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
   const navigate = useNavigate();
   const [localMessages, setLocalMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState(false);
-  const [, setCharmPoints] = useState(0); // Used for gamification tracking
-  const [, setUnlockLevel] = useState(0); // Used for gamification tracking
+  // Gamification state removed
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -38,8 +37,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
   useEffect(() => {
     if (conversationData?.messages) {
       setLocalMessages(conversationData.messages);
-      setCharmPoints(conversationData.conversation_progress.charm_points_earned || 0);
-      setUnlockLevel(conversationData.conversation_progress.unlock_level || 0);
     }
   }, [conversationData]);
 
@@ -61,14 +58,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
         setLocalMessages(prev => [...prev, newMessage]);
         setIsTyping(false);
         
-        // Update progress
-        if (wsMessage.charm_points_gained) {
-          setCharmPoints(prev => prev + wsMessage.charm_points_gained!);
-        }
-        if (wsMessage.unlock_level !== undefined) {
-          setUnlockLevel(wsMessage.unlock_level);
-        }
-        
+        // Gamification updates removed
       }
     });
 
@@ -103,8 +93,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
     try {
       await chatApi.deleteAllMessages(conversationId);
       setLocalMessages([]);
-      setCharmPoints(0);
-      setUnlockLevel(0);
       setShowDeleteModal(false);
     } catch (error) {
       console.error('Failed to delete messages:', error);

@@ -92,7 +92,7 @@ const MessageList: React.FC<MessageListProps> = ({
             Start a conversation with {personaName}
           </h3>
           <p className="text-text-secondary text-sm max-w-sm">
-            Send a message to begin chatting. Be friendly and engaging to earn charm points!
+            Send a message to begin chatting.
           </p>
         </div>
       </div>

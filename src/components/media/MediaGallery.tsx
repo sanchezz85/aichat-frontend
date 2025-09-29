@@ -111,7 +111,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
 }) => {
   const [selectedMedia, setSelectedMedia] = useState<MediaContent | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
-  const [filter, setFilter] = useState<'all' | 'unlocked' | 'locked'>('all');
+  // Filters simplified
 
   // Fetch media
   const { data: mediaItems = [], isLoading, error } = useQuery({
@@ -121,23 +121,15 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   });
 
   // Filter media
-  const filteredMedia = mediaItems.filter(item => {
-    if (filter === 'unlocked') return item.is_unlocked;
-    if (filter === 'locked') return !item.is_unlocked;
-    return true;
-  });
+  const filteredMedia = mediaItems; // no lock filtering
 
   const handleViewMedia = (media: MediaContent) => {
-    if (media.is_unlocked) {
-      setSelectedMedia(media);
-      setViewerOpen(true);
-    }
+    setSelectedMedia(media);
+    setViewerOpen(true);
   };
 
   const handleUnlockMedia = (media: MediaContent) => {
-    // Show unlock modal or navigate to chat
-    console.log('Unlock media:', media.id);
-    // This would typically show a modal explaining unlock requirements
+    // Unlock removed
   };
 
   const handleNavigateViewer = (direction: 'previous' | 'next') => {
@@ -155,8 +147,8 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   };
 
   const currentIndex = selectedMedia ? filteredMedia.findIndex(item => item.id === selectedMedia.id) : -1;
-  const hasPrevious = currentIndex > 0 && filteredMedia[currentIndex - 1]?.is_unlocked;
-  const hasNext = currentIndex < filteredMedia.length - 1 && filteredMedia[currentIndex + 1]?.is_unlocked;
+  const hasPrevious = currentIndex > 0;
+  const hasNext = currentIndex < filteredMedia.length - 1;
 
   if (isLoading) {
     return (
@@ -186,38 +178,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
             {personaName ? `${personaName}'s Media` : 'Media Gallery'}
           </h2>
           
-          <div className="flex items-center space-x-2">
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                filter === 'all'
-                  ? 'bg-brand-500 text-white'
-                  : 'bg-gray-700 text-text-secondary hover:bg-gray-600'
-              }`}
-            >
-              All ({mediaItems.length})
-            </button>
-            <button
-              onClick={() => setFilter('unlocked')}
-              className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                filter === 'unlocked'
-                  ? 'bg-brand-500 text-white'
-                  : 'bg-gray-700 text-text-secondary hover:bg-gray-600'
-              }`}
-            >
-              Unlocked ({mediaItems.filter(m => m.is_unlocked).length})
-            </button>
-            <button
-              onClick={() => setFilter('locked')}
-              className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                filter === 'locked'
-                  ? 'bg-brand-500 text-white'
-                  : 'bg-gray-700 text-text-secondary hover:bg-gray-600'
-              }`}
-            >
-              Locked ({mediaItems.filter(m => !m.is_unlocked).length})
-            </button>
-          </div>
+          
         </div>
       </div>
 
@@ -225,9 +186,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
       {filteredMedia.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-text-secondary">
-            {filter === 'unlocked' && 'No unlocked media yet. Chat more to unlock content!'}
-            {filter === 'locked' && 'No locked media available.'}
-            {filter === 'all' && 'No media available.'}
+            No media available.
           </p>
         </div>
       ) : (

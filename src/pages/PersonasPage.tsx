@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Search, Filter } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { PersonaList, PersonaDetail } from '../components/personas';
 import { MediaGallery } from '../components/media';
 import { usePersonas, usePersona } from '../hooks/usePersonas';
 import { Button, Input } from '../components/ui';
-import { DifficultyLevel } from '../types';
+// Difficulty filter removed
 
 const PersonasPage: React.FC = () => {
   const { personaId, tab } = useParams<{ personaId?: string; tab?: string }>();
@@ -19,8 +19,7 @@ const PersonasPage: React.FC = () => {
 
 const PersonaListPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [difficultyFilter, setDifficultyFilter] = useState<DifficultyLevel | 'all'>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'difficulty' | 'newest'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'newest'>('name');
 
   const { data: personas = [], isLoading, error } = usePersonas();
 
@@ -29,16 +28,12 @@ const PersonaListPage: React.FC = () => {
     .filter(persona => {
       const matchesSearch = persona.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           persona.description.toLowerCase().includes(searchQuery.toLowerCase());
-      const matchesDifficulty = difficultyFilter === 'all' || persona.difficulty_level === difficultyFilter;
-      return matchesSearch && matchesDifficulty;
+      return matchesSearch;
     })
     .sort((a, b) => {
       switch (sortBy) {
         case 'name':
           return a.name.localeCompare(b.name);
-        case 'difficulty':
-          const difficultyOrder = { easy: 1, medium: 2, hard: 3 };
-          return difficultyOrder[a.difficulty_level] - difficultyOrder[b.difficulty_level];
         case 'newest':
           return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
         default:
@@ -81,33 +76,11 @@ const PersonaListPage: React.FC = () => {
             className="px-4 py-2 bg-bg-elev-1 border border-gray-600 rounded-lg text-text-primary focus:ring-2 focus:ring-brand-400 focus:border-transparent"
           >
             <option value="name">Sort by Name</option>
-            <option value="difficulty">Sort by Difficulty</option>
             <option value="newest">Sort by Newest</option>
           </select>
         </div>
 
-        {/* Difficulty Filter */}
-        <div className="flex flex-wrap gap-2">
-          <span className="text-sm text-text-secondary py-2">Filter by difficulty:</span>
-          {(['all', 'easy', 'medium', 'hard'] as const).map((difficulty) => (
-            <button
-              key={difficulty}
-              onClick={() => setDifficultyFilter(difficulty)}
-              className={`px-3 py-1 rounded-full text-sm transition-colors capitalize ${
-                difficultyFilter === difficulty
-                  ? 'bg-brand-500 text-white'
-                  : 'bg-gray-700 text-text-secondary hover:bg-gray-600'
-              }`}
-            >
-              {difficulty}
-              {difficulty !== 'all' && (
-                <span className="ml-1 opacity-60">
-                  ({personas.filter(p => p.difficulty_level === difficulty).length})
-                </span>
-              )}
-            </button>
-          ))}
-        </div>
+        {/* Difficulty filter removed */}
       </div>
 
       {/* Results Summary */}

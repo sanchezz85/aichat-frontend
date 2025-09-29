@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Avatar, Badge, Button } from '../ui';
+import { Avatar, Button } from '../ui';
 import { Persona } from '../../types';
 import { chatApi } from '../../services/api';
 import { resolveAssetUrl } from '../../config/api';
@@ -53,11 +53,7 @@ const PersonaCard: React.FC<PersonaCardProps> = ({
             {persona.description}
           </p>
         </div>
-        <Badge 
-          variant="difficulty" 
-          difficulty={persona.difficulty_level}
-          size="sm"
-        />
+        {/* Difficulty badge removed */}
       </div>
     );
   }
@@ -79,13 +75,7 @@ const PersonaCard: React.FC<PersonaCardProps> = ({
         {/* Gradient overlay for better text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
         
-        {/* Difficulty badge */}
-        <div className="absolute top-3 right-3">
-          <Badge 
-            variant="difficulty" 
-            difficulty={persona.difficulty_level}
-          />
-        </div>
+        {/* Difficulty badge removed */}
         
         {/* Name overlay */}
         <div className="absolute bottom-3 left-3 right-3">

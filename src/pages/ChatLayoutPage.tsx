@@ -8,7 +8,7 @@ import { useUserConversations } from '../hooks/useChat';
 import { usePersona } from '../hooks/usePersonas';
 import { useCreateConversation } from '../hooks/useChat';
 import { Modal, Button } from '../components/ui';
-import { PersonaList } from '../components/personas';
+// import removed
 import { usePersonas } from '../hooks/usePersonas';
 
 const ChatLayoutPage: React.FC = () => {
@@ -117,17 +117,7 @@ const ChatLayoutPage: React.FC = () => {
                     <p className="text-sm text-text-secondary truncate">
                       {persona.description}
                     </p>
-                    <div className="mt-1">
-                      <span className={`text-xs px-2 py-1 rounded ${
-                        persona.difficulty_level === 'easy' 
-                          ? 'bg-green-500/20 text-green-400'
-                          : persona.difficulty_level === 'medium'
-                          ? 'bg-yellow-500/20 text-yellow-400'
-                          : 'bg-red-500/20 text-red-400'
-                      }`}>
-                        {persona.difficulty_level.toUpperCase()}
-                      </span>
-                    </div>
+                    {/* Difficulty badge removed */}
                   </div>
                 </div>
               </div>
