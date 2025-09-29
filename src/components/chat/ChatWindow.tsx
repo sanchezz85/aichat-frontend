@@ -174,7 +174,6 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
         messages={localMessages}
         loading={loadingMessages}
         personaName={persona?.name}
-        personaAvatar={persona?.avatar_url}
         className="flex-1"
       />
 
@@ -211,7 +210,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
           <div className="flex space-x-2 justify-end pt-2">
             <Button
               variant="secondary"
-              size="xs"
+              size="sm"
               onClick={() => setShowDeleteModal(false)}
               disabled={isDeleting}
               className="px-3 py-1.5 text-xs"
@@ -220,7 +219,7 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
             </Button>
             <Button
               variant="primary"
-              size="xs"
+              size="sm"
               onClick={handleDeleteMessages}
               disabled={isDeleting}
               className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 text-xs"

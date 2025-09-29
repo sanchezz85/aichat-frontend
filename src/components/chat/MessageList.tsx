@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import { Avatar } from '../ui';
 import { Message } from '../../types';
 
 // Simple time formatter
@@ -59,7 +58,6 @@ interface MessageListProps {
   messages: Message[];
   loading?: boolean;
   personaName?: string;
-  personaAvatar?: string;
   className?: string;
 }
 
@@ -67,7 +65,6 @@ const MessageList: React.FC<MessageListProps> = ({
   messages,
   loading = false,
   personaName,
-  personaAvatar,
   className
 }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -91,16 +88,6 @@ const MessageList: React.FC<MessageListProps> = ({
     return (
       <div className={`flex-1 flex flex-col items-center justify-center p-6 ${className}`}>
         <div className="text-center">
-          <div className="mb-4">
-            {personaAvatar && (
-              <Avatar
-                src={personaAvatar}
-                alt={personaName}
-                size="xl"
-                fallback={personaName}
-              />
-            )}
-          </div>
           <h3 className="text-lg font-medium text-text-primary mb-2">
             Start a conversation with {personaName}
           </h3>
