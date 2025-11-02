@@ -2,16 +2,15 @@ import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Search } from 'lucide-react';
 import { PersonaList, PersonaDetail } from '../components/personas';
-import { MediaGallery } from '../components/media';
 import { usePersonas, usePersona } from '../hooks/usePersonas';
 import { Button, Input } from '../components/ui';
 // Difficulty filter removed
 
 const PersonasPage: React.FC = () => {
-  const { personaId, tab } = useParams<{ personaId?: string; tab?: string }>();
+  const { personaId } = useParams<{ personaId?: string }>();
 
   if (personaId) {
-    return <PersonaDetailPage personaId={personaId} activeTab={tab} />;
+    return <PersonaDetailPage personaId={personaId} />;
   }
 
   return <PersonaListPage />;
@@ -101,13 +100,7 @@ const PersonaListPage: React.FC = () => {
   );
 };
 
-const PersonaDetailPage: React.FC<{ personaId: string; activeTab?: string }> = ({ 
-  personaId, 
-  activeTab = 'profile' 
-}) => {
-  const [currentTab, setCurrentTab] = useState<'profile' | 'media'>(
-    activeTab as 'profile' | 'media' || 'profile'
-  );
+const PersonaDetailPage: React.FC<{ personaId: string }> = ({ personaId }) => {
 
   const { data: persona, isLoading, error } = usePersona(personaId);
 
@@ -135,38 +128,7 @@ const PersonaDetailPage: React.FC<{ personaId: string; activeTab?: string }> = (
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-      {/* Tabs */}
-      <div className="mb-6">
-        <div className="flex space-x-8 border-b border-gray-700">
-          <button
-            onClick={() => setCurrentTab('profile')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-              currentTab === 'profile'
-                ? 'border-brand-500 text-brand-500'
-                : 'border-transparent text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            Profile
-          </button>
-          <button
-            onClick={() => setCurrentTab('media')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-              currentTab === 'media'
-                ? 'border-brand-500 text-brand-500'
-                : 'border-transparent text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            Media
-          </button>
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      {currentTab === 'profile' ? (
-        <PersonaDetail persona={persona} />
-      ) : (
-        <MediaGallery personaId={personaId} personaName={persona.name} />
-      )}
+      <PersonaDetail persona={persona} />
     </div>
   );
 };

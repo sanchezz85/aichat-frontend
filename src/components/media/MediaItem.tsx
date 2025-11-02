@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Play, Eye } from 'lucide-react';
 import { Button } from '../ui';
 import { MediaContent } from '../../types';
+import { resolveAssetUrl } from '../../config/api';
 
 interface MediaItemProps {
   media: MediaContent;
@@ -45,7 +46,7 @@ const MediaItem: React.FC<MediaItemProps> = ({
         {!imageError ? (
           <>
             <img
-              src={media.file_url}
+              src={resolveAssetUrl(media.file_url)}
               alt="Media content"
               className={`w-full h-full object-cover transition-all duration-200 group-hover:scale-105 ${isLoading ? 'opacity-0' : 'opacity-100'}`}
               onLoad={() => setIsLoading(false)}
@@ -83,15 +84,7 @@ const MediaItem: React.FC<MediaItemProps> = ({
 
         {/* Level badge removed */}
 
-        {/* View/Unlock button overlay */}
-        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <Button size="sm" variant="primary" className="pointer-events-auto">
-            <>
-              <Eye className="w-4 h-4 mr-1" />
-              View
-            </>
-          </Button>
-        </div>
+        {/* View button overlay removed */}
       </div>
 
       {/* Media info */}

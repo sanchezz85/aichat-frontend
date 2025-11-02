@@ -9,6 +9,7 @@ import { useConversationMessages } from '../../hooks/useChat';
 import { usePersona } from '../../hooks/usePersonas';
 import { useWebSocket } from '../../hooks/useWebSocket';
 import { chatApi } from '../../services/api';
+import { resolveAssetUrl } from '../../config/api';
 import { Message, WebSocketMessage } from '../../types';
 
 interface ChatWindowProps {
@@ -88,6 +89,12 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
     navigate(-1);
   };
 
+  const handleAvatarClick = () => {
+    if (personaId) {
+      navigate(`/personas/${personaId}`);
+    }
+  };
+
   const handleDeleteMessages = async () => {
     setIsDeleting(true);
     try {
@@ -117,12 +124,18 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             
-            <Avatar
-              src={persona?.avatar_url}
-              alt={persona?.name}
-              size="xs"
-              fallback={persona?.name}
-            />
+            <button
+              onClick={handleAvatarClick}
+              className="focus:outline-none focus:ring-2 focus:ring-accent rounded-full transition-opacity hover:opacity-80"
+              disabled={!personaId}
+            >
+              <Avatar
+                src={persona?.avatar_url ? resolveAssetUrl(persona.avatar_url) : undefined}
+                alt={persona?.name}
+                size="xs"
+                fallback={persona?.name}
+              />
+            </button>
             
             <div className="min-w-0">
               <h1 className="font-semibold text-text-primary truncate text-sm leading-tight">

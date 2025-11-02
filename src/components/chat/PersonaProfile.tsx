@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Briefcase, User } from 'lucide-react';
 import { Avatar, Badge } from '../ui';
 import { MediaGallery } from '../media';
+import { resolveAssetUrl } from '../../config/api';
 import { PersonaDetail } from '../../types';
 
 interface PersonaProfileProps {
@@ -10,7 +12,14 @@ interface PersonaProfileProps {
 }
 
 const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = false }) => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'about' | 'gallery'>('about');
+
+  const handleAvatarClick = () => {
+    if (persona) {
+      navigate(`/personas/${persona.id}`);
+    }
+  };
 
   if (loading) {
     return (
@@ -59,12 +68,17 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
       <div className="p-6 border-b border-gray-700">
         <div className="text-center mb-6">
           <div className="relative inline-block mb-4">
-            <Avatar
-              src={persona.avatar_url}
-              alt={persona.name}
-              size="xl"
-              fallback={persona.name}
-            />
+            <button
+              onClick={handleAvatarClick}
+              className="focus:outline-none focus:ring-2 focus:ring-accent rounded-full transition-opacity hover:opacity-80 cursor-pointer"
+            >
+              <Avatar
+                src={resolveAssetUrl(persona.avatar_url)}
+                alt={persona.name}
+                size="xl"
+                fallback={persona.name}
+              />
+            </button>
           </div>
           
           <h2 className="text-2xl font-bold text-text-primary mb-2">{persona.name}</h2>

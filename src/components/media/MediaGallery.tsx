@@ -5,6 +5,7 @@ import { Button, Modal } from '../ui';
 import MediaItem from './MediaItem';
 import { mediaApi } from '../../services/api';
 import { MediaContent } from '../../types';
+import { resolveAssetUrl } from '../../config/api';
 
 interface MediaGalleryProps {
   personaId: string;
@@ -30,6 +31,24 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
   hasPrevious,
   hasNext
 }) => {
+  // Handle keyboard navigation
+  React.useEffect(() => {
+    if (!isOpen) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft' && hasPrevious && onPrevious) {
+        onPrevious();
+      } else if (e.key === 'ArrowRight' && hasNext && onNext) {
+        onNext();
+      } else if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, hasPrevious, hasNext, onPrevious, onNext, onClose]);
+
   if (!isOpen) return null;
 
   return (
@@ -69,14 +88,14 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
       <div className="absolute inset-0 flex items-center justify-center">
         {media.content_type === 'video' ? (
           <video
-            src={media.file_url}
+            src={resolveAssetUrl(media.file_url)}
             controls
             className="max-w-full max-h-full"
             autoPlay
           />
         ) : (
           <img
-            src={media.file_url}
+            src={resolveAssetUrl(media.file_url)}
             alt="Media content"
             className="max-w-full max-h-full object-contain"
           />
@@ -140,9 +159,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
     
     if (newIndex >= 0 && newIndex < filteredMedia.length) {
       const newMedia = filteredMedia[newIndex];
-      if (newMedia.is_unlocked) {
-        setSelectedMedia(newMedia);
-      }
+      setSelectedMedia(newMedia);
     }
   };
 

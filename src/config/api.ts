@@ -19,9 +19,10 @@ export const resolveAssetUrl = (url?: string): string => {
     return `${API_CONFIG.MEDIA_BASE_URL}/${path}`;
   }
 
-  if (typeof window !== 'undefined' && url.startsWith('/avatars/')) {
-    // Served by Vite/SPA from public folder if present
-    return `${window.location.origin}${url}`;
+  // Map legacy /avatars/* to backend media path for consistency
+  if (url.startsWith('/avatars/')) {
+    const filename = url.replace(/^\/avatars\//i, '');
+    return `${API_CONFIG.MEDIA_BASE_URL}/avatars/${filename}`;
   }
 
   return url;

@@ -5,7 +5,7 @@ import { BaseComponentProps } from '../../types';
 interface AvatarProps extends BaseComponentProps {
   src?: string;
   alt?: string;
-  size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
   fallback?: string;
   online?: boolean;
   storyRing?: boolean;
@@ -28,7 +28,8 @@ const Avatar: React.FC<AvatarProps> = ({
     sm: 'w-8 h-8',
     md: 'w-10 h-10',
     lg: 'w-14 h-14',
-    xl: 'w-18 h-18'
+    xl: 'w-18 h-18',
+    xxl: 'w-64 h-64'
   } as const;
 
   const ringClasses = storyRing 
@@ -41,7 +42,8 @@ const Avatar: React.FC<AvatarProps> = ({
     sm: 'w-2.5 h-2.5',
     md: 'w-3 h-3',
     lg: 'w-3.5 h-3.5',
-    xl: 'w-4 h-4'
+    xl: 'w-4 h-4',
+    xxl: 'w-5 h-5'
   } as const;
 
   // Generate initials from fallback text
@@ -71,7 +73,8 @@ const Avatar: React.FC<AvatarProps> = ({
             size === 'sm' && 'text-xs',
             size === 'md' && 'text-sm',
             size === 'lg' && 'text-base',
-            size === 'xl' && 'text-lg'
+            size === 'xl' && 'text-lg',
+            size === 'xxl' && 'text-xl'
           )}>
             {initials}
           </span>
