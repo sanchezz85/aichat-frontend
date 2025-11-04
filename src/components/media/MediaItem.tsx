@@ -87,15 +87,7 @@ const MediaItem: React.FC<MediaItemProps> = ({
         {/* View button overlay removed */}
       </div>
 
-      {/* Media info */}
-      <div className="mt-2">
-        <div className="flex items-center justify-between text-xs">
-          <span className="text-text-secondary capitalize">
-            {media.content_type}
-          </span>
-          
-        </div>
-      </div>
+      {/* Media info removed */}
     </div>
   );
 };

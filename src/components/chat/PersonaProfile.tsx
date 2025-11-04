@@ -123,53 +123,12 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
           <div className="p-6 space-y-6">
             {/* Basic Info */}
             <div>
-              <h3 className="text-lg font-semibold text-text-primary mb-4">About Me:</h3>
-              <div className="space-y-3">
-                {personaDetails.age !== undefined && (
-                  <div className="flex items-center gap-3">
-                    <Calendar size={16} className="text-text-secondary" />
-                    <span className="text-sm text-text-secondary">Age</span>
-                    <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.age}</span>
-                  </div>
-                )}
-                
-                {personaDetails.location && (
-                  <div className="flex items-center gap-3">
-                    <MapPin size={16} className="text-text-secondary" />
-                    <span className="text-sm text-text-secondary">Location</span>
-                    <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.location}</span>
-                  </div>
-                )}
-                
-                {personaDetails.occupation && (
-                  <div className="flex items-center gap-3">
-                    <Briefcase size={16} className="text-text-secondary" />
-                    <span className="text-sm text-text-secondary">Occupation</span>
-                    <span className="text-sm text-text-primary font-medium ml-auto">{personaDetails.occupation}</span>
-                  </div>
-                )}
-                
-                {/* Additional extended fields can be displayed once backend provides them */}
-              </div>
-            </div>
-
-            {/* Interests */}
-            <div>
-              <h3 className="text-lg font-semibold text-text-primary mb-3">Interests:</h3>
-              {personaDetails.interests.length > 0 ? (
-                <div className="flex flex-wrap gap-2">
-                  {personaDetails.interests.map((interest, index) => (
-                    <Badge key={index} variant="default" className="text-xs">
-                      {interest}
-                    </Badge>
-                  ))}
+              {persona.interests && (
+                <div className="space-y-2">
+                  <p className="text-text-primary">{persona.interests}</p>
                 </div>
-              ) : (
-                <p className="text-sm text-text-tertiary">No additional details available.</p>
               )}
             </div>
-
-      
           </div>
         ) : (
           <div className="p-6">

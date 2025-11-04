@@ -50,7 +50,7 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
         </div>
       </div>
 
-      {/* Start Chat Button */}
+      {/* Send Message Button */}
       <div className="flex justify-center mb-4">
         <Button
           onClick={startChat}
@@ -59,15 +59,20 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
           className="flex items-center"
         >
           <MessageCircle className="w-4 h-4 mr-2" />
-          Start Chat
+          Send Message
         </Button>
       </div>
 
       {/* Personality Info */}
       <div className="bg-bg-elev-1 rounded-xl p-6 mb-6">
         <h2 className="text-lg font-semibold text-text-primary mb-4">
-          About {persona.name}
+          About:
         </h2>
+        {persona.interests && (
+          <div className="space-y-2">
+            <p className="text-text-primary">{persona.interests}</p>
+          </div>
+        )}
       </div>
 
       {/* Media Gallery */}

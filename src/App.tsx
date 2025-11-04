@@ -1,8 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { HomePage, PersonasPage, ChatPage, ProfilePage } from './pages';
+import { HomePage, ChatPage, ProfilePage } from './pages';
 import ChatLayoutPage from './pages/ChatLayoutPage';
+import PersonaDetailPage from './pages/PersonaDetailPage';
 import { Layout } from './components/layout';
 import { useAuth } from './hooks/useAuth';
 
@@ -38,33 +39,11 @@ const App: React.FC = () => {
             
             {/* Protected routes */}
             <Route
-              path="/personas"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <PersonasPage />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
               path="/personas/:personaId"
               element={
                 <ProtectedRoute>
                   <Layout>
-                    <PersonasPage />
-                  </Layout>
-                </ProtectedRoute>
-              }
-            />
-            
-            <Route
-              path="/personas/:personaId/:tab"
-              element={
-                <ProtectedRoute>
-                  <Layout>
-                    <PersonasPage />
+                    <PersonaDetailPage />
                   </Layout>
                 </ProtectedRoute>
               }

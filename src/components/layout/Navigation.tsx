@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Home, Search, MessageCircle, User, Crown, LogOut } from 'lucide-react';
+import { Home, User, Crown, LogOut } from 'lucide-react';
 import { Avatar } from '../ui';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -28,13 +28,6 @@ const Navigation: React.FC = () => {
       icon: Home,
       mobileOnly: false
     },
-    {
-      path: '/personas',
-      label: 'Explore',
-      icon: Search,
-      mobileOnly: false
-    },
-
     {
       path: '/profile',
       label: 'Profile',

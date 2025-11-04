@@ -8,6 +8,7 @@ export interface Persona {
   description: string;
   personality_prompt: string;
   avatar_url: string;
+  interests: string;
   is_active: boolean;
   created_at: string;
 }

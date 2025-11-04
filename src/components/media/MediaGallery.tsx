@@ -192,7 +192,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
       <div className="mb-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
           <h2 className="text-xl font-semibold text-text-primary mb-2 sm:mb-0">
-            {personaName ? `${personaName}'s Media` : 'Media Gallery'}
+            Gallery:
           </h2>
           
           
@@ -207,7 +207,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredMedia.map((media) => (
             <MediaItem
               key={media.id}

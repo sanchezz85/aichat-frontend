@@ -108,7 +108,7 @@ const PersonaCard: React.FC<PersonaCardProps> = ({
             disabled={isStartingChat}
             className="flex-1"
           >
-            Chat Now
+            Send Message
           </Button>
         </div>
       </div>
