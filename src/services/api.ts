@@ -11,7 +11,9 @@ import {
   Message,
   CreateConversationRequest,
   SendMessageRequest,
-  ChatResponse
+  ChatResponse,
+  FollowRequest,
+  FollowStatus
 } from '../types';
 
 // Create axios instance
@@ -88,6 +90,19 @@ export const chatApi = {
 
   async deleteAllMessages(conversationId: string): Promise<void> {
     await api.delete(`/conversations/${conversationId}/messages`);
+  }
+};
+
+// Follow API
+export const followApi = {
+  async createFollowRequest(personaId: string): Promise<FollowStatus> {
+    const response = await api.post<FollowStatus>('/follow', { personaId });
+    return response.data;
+  },
+
+  async getFollowStatus(personaId: string): Promise<FollowStatus> {
+    const response = await api.get<FollowStatus>(`/follow/${personaId}`);
+    return response.data;
   }
 };
 

@@ -3,13 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import { X, ChevronLeft, ChevronRight, Download, Share } from 'lucide-react';
 import { Button, Modal } from '../ui';
 import MediaItem from './MediaItem';
-import { mediaApi } from '../../services/api';
+import { mediaApi, followApi } from '../../services/api';
 import { MediaContent } from '../../types';
 import { resolveAssetUrl } from '../../config/api';
 
 interface MediaGalleryProps {
   personaId: string;
   personaName?: string;
+  isFollowing?: boolean; // Optional: can be passed from parent to avoid refetching
 }
 
 interface MediaViewerProps {
@@ -126,11 +127,11 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
 
 const MediaGallery: React.FC<MediaGalleryProps> = ({
   personaId,
-  personaName
+  personaName,
+  isFollowing: isFollowingProp
 }) => {
   const [selectedMedia, setSelectedMedia] = useState<MediaContent | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
-  // Filters simplified
 
   // Fetch media
   const { data: mediaItems = [], isLoading, error } = useQuery({
@@ -139,16 +140,25 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
     enabled: !!personaId
   });
 
+  // Fetch follow status if not provided
+  const { data: followStatus } = useQuery({
+    queryKey: ['follow-status', personaId],
+    queryFn: () => followApi.getFollowStatus(personaId),
+    enabled: !!personaId && isFollowingProp === undefined
+  });
+
+  // Determine if user is following
+  const isFollowing = isFollowingProp !== undefined ? isFollowingProp : (followStatus?.isFollowing || false);
+
   // Filter media
-  const filteredMedia = mediaItems; // no lock filtering
+  const filteredMedia = mediaItems;
 
   const handleViewMedia = (media: MediaContent) => {
-    setSelectedMedia(media);
-    setViewerOpen(true);
-  };
-
-  const handleUnlockMedia = (media: MediaContent) => {
-    // Unlock removed
+    // Only allow viewing if following
+    if (isFollowing) {
+      setSelectedMedia(media);
+      setViewerOpen(true);
+    }
   };
 
   const handleNavigateViewer = (direction: 'previous' | 'next') => {
@@ -213,7 +223,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
               key={media.id}
               media={media}
               onView={handleViewMedia}
-              onUnlock={handleUnlockMedia}
+              isLocked={!isFollowing}
             />
           ))}
         </div>

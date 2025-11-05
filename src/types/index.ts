@@ -3,6 +3,19 @@ export * from './auth';
 export * from './persona';
 export * from './chat';
 
+// Follow feature types
+export interface FollowRequest {
+  personaId: string;
+}
+
+export interface FollowStatus {
+  personaId: string;
+  status: 'PENDING' | 'CONFIRMED' | null;
+  createdAt?: string;
+  confirmedAt?: string;
+  isFollowing: boolean;
+}
+
 // Common utility types
 export interface ApiResponse<T> {
   data: T;

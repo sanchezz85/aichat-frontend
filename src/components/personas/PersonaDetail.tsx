@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageCircle } from 'lucide-react';
 import { Avatar, Button } from '../ui';
 import { MediaGallery } from '../media';
-import { PersonaDetail as PersonaDetailType } from '../../types';
-import { chatApi } from '../../services/api';
+import { PersonaDetail as PersonaDetailType, FollowStatus } from '../../types';
+import { chatApi, followApi } from '../../services/api';
 import { resolveAssetUrl } from '../../config/api';
 
 interface PersonaDetailProps {
@@ -13,7 +13,59 @@ interface PersonaDetailProps {
 
 const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
   const navigate = useNavigate();
-  const [isStartingChat, setIsStartingChat] = React.useState(false);
+  const [isStartingChat, setIsStartingChat] = useState(false);
+  const [followStatus, setFollowStatus] = useState<FollowStatus | null>(null);
+  const [followLoading, setFollowLoading] = useState(false);
+
+  useEffect(() => {
+    if (persona) {
+      loadFollowStatus();
+    }
+  }, [persona?.id]);
+
+  // Poll for follow status updates when status is PENDING
+  useEffect(() => {
+    if (!followStatus || followStatus.status !== 'PENDING') {
+      return;
+    }
+
+    const pollInterval = setInterval(() => {
+      loadFollowStatus();
+    }, 5000); // Check every 5 seconds
+
+    return () => clearInterval(pollInterval);
+  }, [followStatus?.status, persona?.id]);
+
+  const loadFollowStatus = async () => {
+    if (!persona) return;
+    try {
+      const status = await followApi.getFollowStatus(persona.id);
+      setFollowStatus(status);
+    } catch (error) {
+      console.error('Error loading follow status:', error);
+    }
+  };
+
+  const handleFollowClick = async () => {
+    if (!persona || followLoading) return;
+    
+    setFollowLoading(true);
+    try {
+      const status = await followApi.createFollowRequest(persona.id);
+      setFollowStatus(status);
+    } catch (error) {
+      console.error('Error creating follow request:', error);
+    } finally {
+      setFollowLoading(false);
+    }
+  };
+
+  const getFollowButtonText = () => {
+    if (!followStatus || !followStatus.status) return 'Follow';
+    if (followStatus.status === 'PENDING') return 'Request Sent';
+    if (followStatus.status === 'CONFIRMED') return 'Following';
+    return 'Follow';
+  };
 
   const startChat = async () => {
     try {
@@ -50,8 +102,16 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
         </div>
       </div>
 
-      {/* Send Message Button */}
-      <div className="flex justify-center mb-4">
+      {/* Action Buttons */}
+      <div className="flex justify-center gap-3 mb-4">
+        <Button
+          onClick={handleFollowClick}
+          variant={followStatus?.isFollowing ? 'secondary' : 'primary'}
+          disabled={followLoading || followStatus?.status === 'PENDING'}
+          className="min-w-[120px]"
+        >
+          {followLoading ? 'Loading...' : getFollowButtonText()}
+        </Button>
         <Button
           onClick={startChat}
           loading={isStartingChat}
@@ -77,7 +137,11 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
 
       {/* Media Gallery */}
       <div className="bg-bg-elev-1 rounded-xl p-6">
-        <MediaGallery personaId={persona.id} personaName={persona.name} />
+        <MediaGallery 
+          personaId={persona.id} 
+          personaName={persona.name}
+          isFollowing={followStatus?.isFollowing || false}
+        />
       </div>
     </div>
   );
