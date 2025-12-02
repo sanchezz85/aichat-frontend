@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { LoginForm, RegisterForm } from '../components/auth';
-import { PersonaList } from '../components/personas';
+import { PersonaList, FollowingList } from '../components/personas';
 import { useAuth } from '../hooks/useAuth';
-import { usePersonas } from '../hooks/usePersonas';
+import { usePersonas, useFollowedPersonas } from '../hooks/usePersonas';
 import { Layout } from '../components/layout';
 
 const HomePage: React.FC = () => {
@@ -44,47 +44,31 @@ const HomePage: React.FC = () => {
 
 const AuthenticatedHome: React.FC = () => {
   const { data: personas, isLoading, error } = usePersonas();
+  const { data: followedPersonas, isLoading: followedLoading } = useFollowedPersonas();
   const { user } = useAuth();
-
   return (
     <div className="bg-bg">
-      {/* Welcome Header */}
-      <div className="bg-bg-elev-1 border-b border-gray-700">
+      <div className="relative">
+        {/* Following List - Independent Left Sidebar */}
+        <div className="fixed left-4 top-[110px] w-64 max-h-[calc(100vh-130px)] overflow-y-auto z-10">
+          <FollowingList 
+            personas={followedPersonas || []}
+            loading={followedLoading}
+          />
+        </div>
+
+        {/* Featured Personas - Aligned with Navbar */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-text-primary mb-2">
-              Welcome to Nova
-            </h1>
-            <p className="text-text-secondary max-w-2xl mx-auto">
-              Connect with AI personas in immersive, gamified conversations. 
-              Build relationships, unlock content, and explore your fantasies in a safe environment.
-            </p>
-          </div>
+   
+
+          <PersonaList 
+            personas={personas || []}
+            loading={isLoading}
+            error={error}
+            layout="grid"
+          />
         </div>
       </div>
-
-
-
-      {/* Featured Personas */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-text-primary mb-2">
-            Featured Personas
-          </h2>
-          <p className="text-text-secondary">
-            Start chatting with our AI personas. Each has their own personality and unlockable content.
-          </p>
-        </div>
-
-        <PersonaList 
-          personas={personas || []}
-          loading={isLoading}
-          error={error}
-          layout="grid"
-        />
-      </div>
-
-
     </div>
   );
 };

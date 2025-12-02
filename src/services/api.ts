@@ -31,6 +31,24 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Handle authentication errors
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Check if error is due to expired/invalid token
+    if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+      // Clear all auth data
+      localStorage.removeItem('auth_token');
+      localStorage.removeItem('auth-storage');
+      
+      // Redirect to login page
+      window.location.href = '/';
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 
 // Auth API
 export const authApi = {
@@ -103,6 +121,11 @@ export const followApi = {
   async getFollowStatus(personaId: string): Promise<FollowStatus> {
     const response = await api.get<FollowStatus>(`/follow/${personaId}`);
     return response.data;
+  },
+  
+  async getFollowedPersonas(): Promise<Persona[]> {
+    const response = await api.get<{ personas: Persona[] }>('/follow');
+    return response.data.personas;
   }
 };
 

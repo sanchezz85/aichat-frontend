@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { personaApi, mediaApi } from '../services/api';
+import { personaApi, mediaApi, followApi } from '../services/api';
 import { Persona, PersonaDetail } from '../types';
 
 export const usePersonas = () => {
@@ -27,6 +27,15 @@ export const usePersonaMedia = (personaId: string) => {
     queryFn: () => mediaApi.getPersonaMedia(personaId),
     enabled: !!personaId,
     staleTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false
+  });
+};
+
+export const useFollowedPersonas = () => {
+  return useQuery<Persona[], Error>({
+    queryKey: ['followed-personas'],
+    queryFn: followApi.getFollowedPersonas,
+    staleTime: 5 * 60 * 1000, // 5 minutes
     refetchOnWindowFocus: false
   });
 };
