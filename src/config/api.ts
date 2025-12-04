@@ -7,7 +7,6 @@ export const API_CONFIG = {
 // Resolve absolute URL for assets coming from backend or public folder
 // - If url is absolute (http/https), return as-is
 // - If url starts with /media, point to backend media host
-// - If url starts with /avatars, serve from frontend public folder
 // - Otherwise, return as-is (let caller decide)
 export const resolveAssetUrl = (url?: string): string => {
   if (!url) return '';
@@ -19,11 +18,12 @@ export const resolveAssetUrl = (url?: string): string => {
     return `${API_CONFIG.MEDIA_BASE_URL}/${path}`;
   }
 
-  // Map legacy /avatars/* to backend media path for consistency
-  if (url.startsWith('/avatars/')) {
-    const filename = url.replace(/^\/avatars\//i, '');
-    return `${API_CONFIG.MEDIA_BASE_URL}/avatars/${filename}`;
-  }
-
   return url;
+};
+
+// Generate avatar URL for a persona by name
+// Avatar path structure: /media/<persona_name>/avatar/<persona_name>.jpg
+export const getPersonaAvatarUrl = (personaName: string): string => {
+  const name = personaName.toLowerCase();
+  return `${API_CONFIG.MEDIA_BASE_URL}/${name}/avatar/${name}.jpg`;
 };

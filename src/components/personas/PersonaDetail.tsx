@@ -119,7 +119,7 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
           className="flex items-center"
         >
           <MessageCircle className="w-4 h-4 mr-2" />
-          Send Message
+          Chat
         </Button>
       </div>
 

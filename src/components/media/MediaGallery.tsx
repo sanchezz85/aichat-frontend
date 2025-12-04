@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { X, ChevronLeft, ChevronRight, Download, Share } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight, Download, Share, Users } from 'lucide-react';
 import { Button, Modal } from '../ui';
 import MediaItem from './MediaItem';
 import { mediaApi, followApi } from '../../services/api';
@@ -150,32 +150,43 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   // Determine if user is following
   const isFollowing = isFollowingProp !== undefined ? isFollowingProp : (followStatus?.isFollowing || false);
 
-  // Filter media
-  const filteredMedia = mediaItems;
+  // Separate SFW and NSFW media
+  const sfwMedia = mediaItems.filter(media => !media.is_nsfw);
+  const nsfwMedia = mediaItems.filter(media => media.is_nsfw);
 
   const handleViewMedia = (media: MediaContent) => {
-    // Only allow viewing if following
-    if (isFollowing) {
+    // SFW images can always be viewed
+    // NSFW images require following
+    if (!media.is_nsfw || isFollowing) {
       setSelectedMedia(media);
       setViewerOpen(true);
     }
   };
 
+  // Get the current category's media list for navigation (SFW or NSFW, but not crossing between them)
+  const getCurrentCategoryMedia = () => {
+    if (!selectedMedia) return [];
+    return selectedMedia.is_nsfw ? nsfwMedia : sfwMedia;
+  };
+
   const handleNavigateViewer = (direction: 'previous' | 'next') => {
     if (!selectedMedia) return;
     
-    const currentIndex = filteredMedia.findIndex(item => item.id === selectedMedia.id);
+    // Navigate only within the same category (SFW or NSFW)
+    const categoryMedia = getCurrentCategoryMedia();
+    const currentIndex = categoryMedia.findIndex(item => item.id === selectedMedia.id);
     const newIndex = direction === 'next' ? currentIndex + 1 : currentIndex - 1;
     
-    if (newIndex >= 0 && newIndex < filteredMedia.length) {
-      const newMedia = filteredMedia[newIndex];
+    if (newIndex >= 0 && newIndex < categoryMedia.length) {
+      const newMedia = categoryMedia[newIndex];
       setSelectedMedia(newMedia);
     }
   };
 
-  const currentIndex = selectedMedia ? filteredMedia.findIndex(item => item.id === selectedMedia.id) : -1;
+  const categoryMedia = getCurrentCategoryMedia();
+  const currentIndex = selectedMedia ? categoryMedia.findIndex(item => item.id === selectedMedia.id) : -1;
   const hasPrevious = currentIndex > 0;
-  const hasNext = currentIndex < filteredMedia.length - 1;
+  const hasNext = currentIndex < categoryMedia.length - 1;
 
   if (isLoading) {
     return (
@@ -210,22 +221,57 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
       </div>
 
       {/* Media grid */}
-      {filteredMedia.length === 0 ? (
+      {mediaItems.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-text-secondary">
             No media available.
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredMedia.map((media) => (
-            <MediaItem
-              key={media.id}
-              media={media}
-              onView={handleViewMedia}
-              isLocked={!isFollowing}
-            />
-          ))}
+        <div className="space-y-8">
+          {/* SFW Section */}
+          {sfwMedia.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sfwMedia.map((media) => (
+                <MediaItem
+                  key={media.id}
+                  media={media}
+                  onView={handleViewMedia}
+                  isLocked={false}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Separator between sections */}
+          {sfwMedia.length > 0 && nsfwMedia.length > 0 && (
+            <div className="border-t border-gray-700/50" />
+          )}
+
+          {/* Friends-only Section (NSFW) */}
+          {nsfwMedia.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-white/10 border border-white/20 rounded-lg">
+                  <Users className="w-4 h-4 text-white" />
+                  <span className="text-white text-sm font-medium">Only</span>
+                </div>
+                {!isFollowing && (
+                  <span className="text-text-tertiary text-sm">Follow to unlock</span>
+                )}
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {nsfwMedia.map((media) => (
+                  <MediaItem
+                    key={media.id}
+                    media={media}
+                    onView={handleViewMedia}
+                    isLocked={!isFollowing}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
 

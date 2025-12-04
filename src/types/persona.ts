@@ -24,5 +24,16 @@ export interface MediaContent {
   file_url: string;
   content_type: 'image' | 'video';
   created_at: string;
+  is_nsfw: boolean;
+}
+
+export interface Post {
+  id: string;
+  persona: Persona;
+  text: string;
+  media: MediaContent[];
+  likes: number;
+  created_at: string;
+  liked_by_user?: boolean;
 }
 

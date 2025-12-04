@@ -13,7 +13,8 @@ import {
   SendMessageRequest,
   ChatResponse,
   FollowRequest,
-  FollowStatus
+  FollowStatus,
+  Post
 } from '../types';
 
 // Create axios instance
@@ -126,6 +127,19 @@ export const followApi = {
   async getFollowedPersonas(): Promise<Persona[]> {
     const response = await api.get<{ personas: Persona[] }>('/follow');
     return response.data.personas;
+  }
+};
+
+// Post API
+export const postApi = {
+  async getPosts(): Promise<Post[]> {
+    const response = await api.get<{ posts: Post[] }>('/posts');
+    return response.data.posts;
+  },
+
+  async getPostsByPersona(personaId: string): Promise<Post[]> {
+    const response = await api.get<{ posts: Post[] }>(`/posts/persona/${personaId}`);
+    return response.data.posts;
   }
 };
 

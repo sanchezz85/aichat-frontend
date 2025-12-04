@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar } from '../ui';
 import { Conversation } from '../../types';
-import { resolveAssetUrl } from '../../config/api';
+import { getPersonaAvatarUrl } from '../../config/api';
 
 interface ChatSidebarProps {
   conversations: Conversation[];
@@ -33,8 +33,7 @@ const ChatSidebar: React.FC<ChatSidebarProps> = (props) => {
 
   const getPersonaAvatarSrc = (personaName?: string): string | undefined => {
     if (!personaName) return undefined;
-    const file = `/avatars/${personaName.toLowerCase()}.jpg`;
-    return resolveAssetUrl(file);
+    return getPersonaAvatarUrl(personaName);
   };
   return (
     <div className="w-[24.3rem] bg-bg-secondary border-r border-gray-700 h-full flex flex-col">
