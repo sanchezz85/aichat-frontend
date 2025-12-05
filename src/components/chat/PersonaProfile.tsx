@@ -134,8 +134,10 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
             </button>
           </div>
           
-          <h2 className="text-2xl font-bold text-text-primary mb-2">{persona.name}</h2>
-          
+          <h2 className="text-2xl font-bold text-text-primary mb-1">{persona.name}</h2>
+          {persona.username && (
+            <p className="text-sm text-text-tertiary mb-2">{persona.username}</p>
+          )}
           
           <p className="text-sm text-text-secondary leading-relaxed mb-4">
             {persona.description}

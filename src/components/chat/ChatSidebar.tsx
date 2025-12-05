@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar } from '../ui';
 import { Conversation } from '../../types';
-import { getPersonaAvatarUrl } from '../../config/api';
+import { resolveAssetUrl } from '../../config/api';
 
 interface ChatSidebarProps {
   conversations: Conversation[];
@@ -31,10 +31,6 @@ const ChatSidebar: React.FC<ChatSidebarProps> = (props) => {
     loading = false
   } = props;
 
-  const getPersonaAvatarSrc = (personaName?: string): string | undefined => {
-    if (!personaName) return undefined;
-    return getPersonaAvatarUrl(personaName);
-  };
   return (
     <div className="w-[24.3rem] bg-bg-secondary border-r border-gray-700 h-full flex flex-col">
       <div className="p-4 border-b border-gray-700">
@@ -60,10 +56,12 @@ const ChatSidebar: React.FC<ChatSidebarProps> = (props) => {
                       isSelected ? 'bg-bg-elev-1' : ''
                     }`}
                   >
-                    <Avatar src={getPersonaAvatarSrc(conv.persona_name)} alt={conv.persona_name} size="xs" fallback={conv.persona_name} />
+                    <Avatar src={resolveAssetUrl(conv.persona_avatar_url)} alt={conv.persona_name} size="xs" fallback={conv.persona_name} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="text-sm font-medium text-text-primary truncate">{conv.persona_name}</span>
+                        <span className="text-sm font-medium text-text-primary truncate">
+                          {conv.persona_name} <span className="font-normal text-text-secondary">({conv.persona_username})</span>
+                        </span>
                         <span className="text-xs text-text-tertiary flex-shrink-0">
                           {formatTimeAgo(conv.last_message_at)}
                         </span>

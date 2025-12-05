@@ -13,6 +13,8 @@ export interface Conversation {
   user_id: string;
   persona_id: string;
   persona_name: string;
+  persona_username: string;
+  persona_avatar_url?: string;
   message_count: number;
   created_at: string;
   updated_at: string;

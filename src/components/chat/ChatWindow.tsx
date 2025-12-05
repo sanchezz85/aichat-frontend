@@ -138,9 +138,14 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ conversationId }) => {
             </button>
             
             <div className="min-w-0">
-              <h1 className="font-semibold text-text-primary truncate text-sm leading-tight">
-                {persona?.name || 'Loading...'}
-              </h1>
+              <div className="flex items-center gap-1.5">
+                <h1 className="font-semibold text-text-primary truncate text-sm leading-tight">
+                  {persona?.name || 'Loading...'}
+                </h1>
+                {persona?.username && (
+                  <span className="text-text-secondary text-xs truncate">({persona.username})</span>
+                )}
+              </div>
               <div className="flex items-center -mt-0.5">
                 <span className={`flex items-center text-xs ${isConnected ? 'text-green-400' : 'text-red-400'}`}>
                   {isConnected ? <Wifi className="w-2.5 h-2.5 mr-1" /> : <WifiOff className="w-2.5 h-2.5 mr-1" />}

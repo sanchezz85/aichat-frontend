@@ -75,7 +75,7 @@ const FollowingList: React.FC<FollowingListProps> = ({ personas, loading }) => {
               />
             </div>
             <span className="text-text-primary text-sm font-medium text-center">
-              {persona.name}
+              {persona.name} <span className="text-text-secondary font-normal">({persona.username})</span>
             </span>
           </div>
         ))}

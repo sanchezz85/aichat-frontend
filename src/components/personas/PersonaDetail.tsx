@@ -92,6 +92,7 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
       <div className="bg-bg-elev-1 rounded-xl p-6 mb-4">
         <div className="flex flex-col items-center text-center space-y-3">
           <h1 className="text-2xl font-bold text-text-primary">{persona.name}</h1>
+          <p className="text-text-tertiary text-sm -mt-1">{persona.username}</p>
           <p className="text-text-secondary">{persona.description}</p>
           <Avatar
             src={resolveAssetUrl(persona.avatar_url)}

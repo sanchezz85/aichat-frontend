@@ -5,6 +5,7 @@
 export interface Persona {
   id: string;
   name: string;
+  username: string;
   description: string;
   personality_prompt: string;
   avatar_url: string;

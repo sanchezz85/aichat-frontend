@@ -86,6 +86,7 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike }) => {
                 {post.persona.name}
               </h3>
             </button>
+            <p className="text-text-secondary text-sm -mt-0.5">{post.persona.username}</p>
           </div>
         </div>
         <div className="text-text-tertiary text-sm">
