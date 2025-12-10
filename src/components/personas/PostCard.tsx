@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, MessageCircle } from 'lucide-react';
-import { Avatar } from '../ui';
+import { Avatar, ImageLightbox } from '../ui';
 import { Post } from '../../types';
 import { resolveAssetUrl } from '../../config/api';
 import { chatApi } from '../../services/api';
+import type { LightboxImage } from '../ui/ImageLightbox';
 
 interface PostCardProps {
   post: Post;
@@ -16,6 +17,8 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike }) => {
   const [isLiked, setIsLiked] = useState(post.liked_by_user || false);
   const [likeCount, setLikeCount] = useState(post.likes);
   const [isStartingChat, setIsStartingChat] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -41,6 +44,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike }) => {
     navigate(`/personas/${post.persona.id}`);
   };
 
+  const handleImageClick = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -59,6 +67,12 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike }) => {
     }
     return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
   };
+
+  // Prepare images for lightbox
+  const lightboxImages: LightboxImage[] = post.media?.map((media) => ({
+    url: resolveAssetUrl(media.file_url),
+    alt: 'Post content'
+  })) || [];
 
   return (
     <article className="bg-bg-elev-1 rounded-xl overflow-hidden border border-white/[0.08] mb-4">
@@ -110,8 +124,9 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike }) => {
             <img
               src={resolveAssetUrl(post.media[0].file_url)}
               alt="Post content"
-              className="w-full object-cover"
+              className="w-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
               style={{ maxHeight: '600px' }}
+              onClick={() => handleImageClick(0)}
             />
           ) : (
             <div className="grid grid-cols-2 gap-1">
@@ -120,10 +135,11 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike }) => {
                   <img
                     src={resolveAssetUrl(media.file_url)}
                     alt={`Post content ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover cursor-pointer hover:opacity-95 transition-opacity"
+                    onClick={() => handleImageClick(index)}
                   />
                   {index === 3 && post.media.length > 4 && (
-                    <div className="absolute inset-0 bg-black/70 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-black/70 flex items-center justify-center pointer-events-none">
                       <span className="text-white text-2xl font-semibold">
                         +{post.media.length - 4}
                       </span>
@@ -171,6 +187,15 @@ const PostCard: React.FC<PostCardProps> = ({ post, onLike }) => {
           </span>
         </button>
       </div>
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        images={lightboxImages}
+        currentIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        onNavigate={setLightboxIndex}
+      />
     </article>
   );
 };

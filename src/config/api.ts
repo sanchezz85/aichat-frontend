@@ -8,14 +8,22 @@ export const API_CONFIG = {
 // - If url is absolute (http/https), return as-is
 // - If url starts with /media, point to backend media host
 // - Otherwise, return as-is (let caller decide)
-export const resolveAssetUrl = (url?: string): string => {
+export const resolveAssetUrl = (url?: string, bustCache: boolean = false): string => {
   if (!url) return '';
   if (/^https?:\/\//i.test(url)) return url;
 
   if (url.startsWith('/media/')) {
     // Ensure we don't double up the /media prefix
     const path = url.replace(/^\/media\/?/i, '');
-    return `${API_CONFIG.MEDIA_BASE_URL}/${path}`;
+    let fullUrl = `${API_CONFIG.MEDIA_BASE_URL}/${path}`;
+    
+    // Add cache-busting parameter for avatars if requested
+    if (bustCache && url.includes('/avatar/')) {
+      const timestamp = Date.now();
+      fullUrl += `?v=${timestamp}`;
+    }
+    
+    return fullUrl;
   }
 
   return url;
