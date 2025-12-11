@@ -14,7 +14,7 @@ interface PersonaProfileProps {
 
 const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = false }) => {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'about' | 'gallery'>('about');
+  const [activeTab, setActiveTab] = useState<'about' | 'gallery'>('gallery');
   const [followStatus, setFollowStatus] = useState<FollowStatus | null>(null);
   const [followLoading, setFollowLoading] = useState(false);
 
@@ -76,10 +76,10 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
 
   if (loading) {
     return (
-      <div className="w-[30rem] bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
+      <div className="flex-1 min-w-0 bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
         <div className="p-6">
           <div className="animate-pulse space-y-6">
-            <div className="w-24 h-24 bg-gray-600 rounded-full mx-auto"></div>
+            <div className="w-64 h-64 bg-gray-600 rounded-full mx-auto"></div>
             <div className="space-y-4">
               <div className="h-6 bg-gray-600 rounded w-3/4 mx-auto"></div>
               <div className="h-4 bg-gray-700 rounded w-full"></div>
@@ -93,11 +93,11 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
 
   if (!persona) {
     return (
-      <div className="w-[30rem] bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
+      <div className="flex-1 min-w-0 bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
         <div className="p-6">
           <div className="text-center text-text-secondary">
-            <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
-              <User size={32} />
+            <div className="w-64 h-64 mx-auto mb-4 rounded-full bg-gray-700 flex items-center justify-center">
+              <User size={80} />
             </div>
             <p className="text-sm">Select a conversation to view persona profile</p>
           </div>
@@ -116,10 +116,10 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
 
 
   return (
-    <div className="w-[30rem] bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
+    <div className="flex-1 min-w-0 bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
       {/* Header with persona image and basic info */}
       <div className="p-6 border-b border-gray-700">
-        <div className="text-center mb-6">
+        <div className="text-center mb-2">
           <div className="relative inline-block mb-4">
             <button
               onClick={handleAvatarClick}
@@ -128,7 +128,7 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
               <Avatar
                 src={resolveAssetUrl(persona.avatar_url)}
                 alt={persona.name}
-                size="xl"
+                size="xxl"
                 fallback={persona.name}
               />
             </button>
@@ -139,12 +139,12 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
             <p className="text-sm text-text-tertiary mb-2">{persona.username}</p>
           )}
           
-          <p className="text-sm text-text-secondary leading-relaxed mb-4">
+          <p className="text-sm text-text-secondary leading-relaxed mb-3">
             {persona.description}
           </p>
 
           {/* Follow Button */}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-2">
             <Button
               onClick={handleFollowClick}
               variant={followStatus?.isFollowing ? 'secondary' : 'primary'}
@@ -162,18 +162,8 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
       <div className="border-b border-gray-700">
         <div className="flex">
           <button
-            onClick={() => setActiveTab('about')}
-            className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
-              activeTab === 'about'
-                ? 'text-accent border-b-2 border-accent'
-                : 'text-text-secondary hover:text-text-primary'
-            }`}
-          >
-            About
-          </button>
-          <button
             onClick={() => setActiveTab('gallery')}
-            className={`flex-1 py-3 px-4 text-sm font-medium transition-colors ${
+            className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
               activeTab === 'gallery'
                 ? 'text-accent border-b-2 border-accent'
                 : 'text-text-secondary hover:text-text-primary'
@@ -181,13 +171,23 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
           >
             Gallery
           </button>
+          <button
+            onClick={() => setActiveTab('about')}
+            className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
+              activeTab === 'about'
+                ? 'text-accent border-b-2 border-accent'
+                : 'text-text-secondary hover:text-text-primary'
+            }`}
+          >
+            About
+          </button>
         </div>
       </div>
 
       {/* Tab Content */}
       <div>
         {activeTab === 'about' ? (
-          <div className="p-6 space-y-6">
+          <div className="p-4 space-y-4">
             {/* Basic Info */}
             <div>
               {persona.interests && (
@@ -199,7 +199,7 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
 
           </div>
         ) : (
-          <div className="p-6">
+          <div className="p-4">
             <MediaGallery 
               personaId={persona.id}
               personaName={persona.name}

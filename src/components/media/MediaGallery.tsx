@@ -210,9 +210,9 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
   return (
     <div>
       {/* Header and filters */}
-      <div className="mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
-          <h2 className="text-xl font-semibold text-text-primary mb-2 sm:mb-0">
+      <div className="mb-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="text-xl font-semibold text-text-primary">
             Gallery:
           </h2>
           

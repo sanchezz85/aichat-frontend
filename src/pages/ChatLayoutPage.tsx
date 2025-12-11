@@ -16,6 +16,7 @@ const ChatLayoutPage: React.FC = () => {
   const location = useLocation();
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [showPersonaModal, setShowPersonaModal] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Check if we have a conversation ID from navigation state
   useEffect(() => {
@@ -73,16 +74,21 @@ const ChatLayoutPage: React.FC = () => {
           onSelectConversation={handleSelectConversation}
           onCreateNewConversation={handleCreateNewConversation}
           loading={loadingConversations}
+          isCollapsed={isSidebarCollapsed}
+          onToggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         />
 
-        {/* Middle Column - Chat Messages */}
-        <ChatColumn conversationId={selectedConversationId} />
+        {/* Main Content Area - Split 50:50 between Chat and Profile */}
+        <div className="flex-1 flex min-w-0">
+          {/* Middle Column - Chat Messages */}
+          <ChatColumn conversationId={selectedConversationId} />
 
-        {/* Right Sidebar - Persona Profile */}
-        <PersonaProfile 
-          persona={selectedPersona || null}
-          loading={!selectedPersona && !!selectedConversation}
-        />
+          {/* Right Sidebar - Persona Profile */}
+          <PersonaProfile 
+            persona={selectedPersona || null}
+            loading={!selectedPersona && !!selectedConversation}
+          />
+        </div>
       </div>
 
       {/* Modal for selecting persona when creating new conversation */}
