@@ -61,6 +61,10 @@ export const authApi = {
   async register(credentials: RegisterRequest): Promise<AuthResponse> {
     const response = await api.post<AuthResponse>('/auth/register', credentials);
     return response.data;
+  },
+
+  async deleteAccount(): Promise<void> {
+    await api.delete('/auth/account');
   }
 };
 

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AuthStore, User, LoginRequest, RegisterRequest } from '../types';
 import { authApi } from '../services/api';
+import { queryClient } from '../App';
 
 export const useAuth = create<AuthStore>()(
   persist(
@@ -48,11 +49,30 @@ export const useAuth = create<AuthStore>()(
 
       logout: () => {
         localStorage.removeItem('auth_token');
+        // Clear all React Query cache to remove old user's data
+        queryClient.clear();
         set({
           user: null,
           token: null,
           isAuthenticated: false
         });
+      },
+
+      deleteAccount: async () => {
+        try {
+          await authApi.deleteAccount();
+          localStorage.removeItem('auth_token');
+          // Clear all React Query cache to remove old user's data
+          queryClient.clear();
+          set({
+            user: null,
+            token: null,
+            isAuthenticated: false
+          });
+        } catch (error) {
+          console.error('Account deletion failed:', error);
+          throw error;
+        }
       },
 
       setUser: (user: User) => {

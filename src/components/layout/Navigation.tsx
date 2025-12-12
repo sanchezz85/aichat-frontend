@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, User, Crown, LogOut } from 'lucide-react';
-import { Avatar } from '../ui';
 import { useAuth } from '../../hooks/useAuth';
 
 const Navigation: React.FC = () => {
@@ -32,7 +31,7 @@ const Navigation: React.FC = () => {
       path: '/profile',
       label: 'Profile',
       icon: User,
-      mobileOnly: false
+      mobileOnly: true
     }
   ];
 
@@ -68,6 +67,17 @@ const Navigation: React.FC = () => {
             {/* User Info */}
             {(user || isAuthenticated) && (
               <div className="flex items-center space-x-2">
+                <Link
+                  to="/profile"
+                  className={`flex items-center space-x-1 px-2 py-1 text-xs rounded-md transition-colors ${
+                    isActive('/profile')
+                      ? 'text-brand-400 bg-brand-500/10'
+                      : 'text-text-secondary hover:text-text-primary hover:bg-gray-800'
+                  }`}
+                >
+                  <User className="w-3 h-3" />
+                  <span>Profile</span>
+                </Link>
            
                 <a 
                   href="#"

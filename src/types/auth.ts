@@ -30,6 +30,7 @@ export interface AuthStore {
   login: (credentials: LoginRequest) => Promise<void>;
   register: (credentials: RegisterRequest) => Promise<void>;
   logout: () => void;
+  deleteAccount: () => Promise<void>;
   setUser: (user: User) => void;
 }
 

@@ -89,10 +89,10 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
   return (
     <div className="max-w-2xl mx-auto">
       {/* Header */}
-      <div className="bg-bg-elev-1 rounded-xl p-6 mb-4">
-        <div className="flex flex-col items-center text-center space-y-3">
+      <div className="bg-bg-elev-1 rounded-xl p-4 mb-3">
+        <div className="flex flex-col items-center text-center space-y-2">
           <h1 className="text-2xl font-bold text-text-primary">{persona.name}</h1>
-          <p className="text-text-tertiary text-sm -mt-1">{persona.username}</p>
+          <p className="text-text-tertiary text-sm -mt-0.5">{persona.username}</p>
           <p className="text-text-secondary">{persona.description}</p>
           <Avatar
             src={resolveAssetUrl(persona.avatar_url)}
@@ -104,7 +104,7 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex justify-center gap-3 mb-4">
+      <div className="flex justify-center gap-2 mb-3">
         <Button
           onClick={handleFollowClick}
           variant={followStatus?.isFollowing ? 'secondary' : 'primary'}
@@ -125,8 +125,8 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
       </div>
 
       {/* Personality Info */}
-      <div className="bg-bg-elev-1 rounded-xl p-6 mb-6">
-        <h2 className="text-lg font-semibold text-text-primary mb-4">
+      <div className="bg-bg-elev-1 rounded-xl p-4 mb-3">
+        <h2 className="text-lg font-semibold text-text-primary mb-3">
           About:
         </h2>
         {persona.interests && (
@@ -137,7 +137,7 @@ const PersonaDetail: React.FC<PersonaDetailProps> = ({ persona }) => {
       </div>
 
       {/* Media Gallery */}
-      <div className="bg-bg-elev-1 rounded-xl p-6">
+      <div className="bg-bg-elev-1 rounded-xl p-4">
         <MediaGallery 
           personaId={persona.id} 
           personaName={persona.name}

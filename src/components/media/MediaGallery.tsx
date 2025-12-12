@@ -11,6 +11,8 @@ interface MediaGalleryProps {
   personaId: string;
   personaName?: string;
   isFollowing?: boolean; // Optional: can be passed from parent to avoid refetching
+  fullScreen?: boolean; // Whether to show viewer in full screen (default: true)
+  onMediaOpen?: () => void; // Callback when media viewer opens (useful for scrolling to top)
 }
 
 interface MediaViewerProps {
@@ -21,6 +23,7 @@ interface MediaViewerProps {
   onNext?: () => void;
   hasPrevious?: boolean;
   hasNext?: boolean;
+  fullScreen?: boolean; // Whether to show viewer in full screen (default: true)
 }
 
 const MediaViewer: React.FC<MediaViewerProps> = ({
@@ -30,7 +33,8 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
   onPrevious,
   onNext,
   hasPrevious,
-  hasNext
+  hasNext,
+  fullScreen = true
 }) => {
   // Handle keyboard navigation
   React.useEffect(() => {
@@ -53,7 +57,7 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div className={`${fullScreen ? 'fixed' : 'absolute'} inset-0 z-50 bg-black`}>
       {/* Header */}
       <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/80 to-transparent p-4">
         <div className="flex items-center justify-between">
@@ -128,7 +132,9 @@ const MediaViewer: React.FC<MediaViewerProps> = ({
 const MediaGallery: React.FC<MediaGalleryProps> = ({
   personaId,
   personaName,
-  isFollowing: isFollowingProp
+  isFollowing: isFollowingProp,
+  fullScreen = true,
+  onMediaOpen
 }) => {
   const [selectedMedia, setSelectedMedia] = useState<MediaContent | null>(null);
   const [viewerOpen, setViewerOpen] = useState(false);
@@ -160,6 +166,8 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
     if (!media.is_nsfw || isFollowing) {
       setSelectedMedia(media);
       setViewerOpen(true);
+      // Call the callback to handle any scroll positioning
+      onMediaOpen?.();
     }
   };
 
@@ -285,6 +293,7 @@ const MediaGallery: React.FC<MediaGalleryProps> = ({
           onNext={() => handleNavigateViewer('next')}
           hasPrevious={hasPrevious}
           hasNext={hasNext}
+          fullScreen={fullScreen}
         />
       )}
     </div>

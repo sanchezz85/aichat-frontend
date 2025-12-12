@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Briefcase, User } from 'lucide-react';
 import { Avatar, Badge, Button } from '../ui';
@@ -14,6 +14,7 @@ interface PersonaProfileProps {
 
 const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = false }) => {
   const navigate = useNavigate();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'gallery'>('gallery');
   const [followStatus, setFollowStatus] = useState<FollowStatus | null>(null);
   const [followLoading, setFollowLoading] = useState(false);
@@ -74,6 +75,13 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
     }
   };
 
+  const handleMediaOpen = () => {
+    // Scroll to top when media viewer opens so it's visible
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex-1 min-w-0 bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
@@ -116,7 +124,10 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
 
 
   return (
-    <div className="flex-1 min-w-0 bg-bg-secondary border-l border-gray-700 h-full chat-scrollable">
+    <div 
+      ref={scrollContainerRef}
+      className="flex-1 min-w-0 bg-bg-secondary border-l border-gray-700 h-full chat-scrollable relative"
+    >
       {/* Header with persona image and basic info */}
       <div className="p-6 border-b border-gray-700">
         <div className="text-center mb-2">
@@ -204,6 +215,8 @@ const PersonaProfile: React.FC<PersonaProfileProps> = ({ persona, loading = fals
               personaId={persona.id}
               personaName={persona.name}
               isFollowing={followStatus?.isFollowing || false}
+              fullScreen={false}
+              onMediaOpen={handleMediaOpen}
             />
           </div>
         )}
